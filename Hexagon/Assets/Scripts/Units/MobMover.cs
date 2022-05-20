@@ -8,12 +8,13 @@ public class MobMover : MonoBehaviour
     [SerializeField] float distanceToNextTarget;
     [SerializeField] GameObject currentTarget;
     [SerializeField] GameObject[] closestTiles = null;
-
+    [SerializeField] GameObject isCurrentlyOn = null;
     [SerializeField] float distanceOfTwoTiles = 6f;
     [SerializeField] float speed;
     [SerializeField] float startSpeed = 5f;
     [SerializeField] float timeAtTile = .5f;
     SpawnEnemies spawnEnemies;
+
   
     GameObject[] all;
    
@@ -44,6 +45,7 @@ public class MobMover : MonoBehaviour
         }
 
     }
+
 
     private void CheckTileType()
     {
@@ -114,7 +116,6 @@ public class MobMover : MonoBehaviour
             CheckTileType();
 
     }
-
 
     void MobWentThrough()
     {

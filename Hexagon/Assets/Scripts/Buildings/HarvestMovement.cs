@@ -5,38 +5,43 @@ using UnityEngine;
 public class HarvestMovement : MonoBehaviour
 {
     [SerializeField] GameObject[] tiles;
-    [SerializeField] float speed = 3f;
+    [SerializeField] float baseSpeed = 3f;
     [SerializeField] float distanceTolerance = .1f;
-    [SerializeField] Harvester harvesterBuilding;
+    [SerializeField] GameObject harvesterBuilding;
     [SerializeField] int indexToHarvest = 0;
 
+    [SerializeField] GameObject rssPrefab;
     Transform targetTransform;
     bool nextUpHarvest = true;
+    float speed;
     ResourceManager rssManager;
-    int currentResource;
-
+    GameObject rssInstance;
     void Start()
     {
         rssManager = FindObjectOfType<ResourceManager>();
-        tiles = harvesterBuilding.GetClosestTiles(harvesterBuilding.gameObject);
-
+        for (int i = 0; i < tiles.Length; i++)
+        { tiles[i] = harvesterBuilding.GetComponent<Harvester>().GetNeighboredTile(i); }
     }
 
     void Update()
     {
-        Move();
+       Move();
     }
 
     void Move()
     {
+        speed = baseSpeed*((harvesterBuilding.GetComponent<Building>().GetLevel())+1);
         if (nextUpHarvest)
         {
-            while (tiles[indexToHarvest].activeSelf == false)                       // Making sure it's never stuck - or running into inactive ones.
-            {
-                indexToHarvest++;
-                if (indexToHarvest >= 6)
-                { indexToHarvest = 0; }
+            if (tiles[0].activeSelf == true || tiles[1].activeSelf == true || tiles[2].activeSelf == true || tiles[3].activeSelf == true || tiles[4].activeSelf == true || tiles[5].activeSelf == true) // avoid while-infinite-loop on start-tile.
+            { 
+                while (tiles[indexToHarvest].activeSelf == false)                       // Making sure it's never stuck - or running into inactive ones.
+                {
+                    indexToHarvest++;
+                    if (indexToHarvest >= 6)
+                    { indexToHarvest = 0; }
 
+                }
             }
         }
 
@@ -56,13 +61,27 @@ public class HarvestMovement : MonoBehaviour
             var step = speed * Time.deltaTime;                                       // Moving until distanceTolerance reached
             transform.position = Vector3.MoveTowards(transform.position, new Vector3(targetTransform.position.x, transform.position.y, targetTransform.transform.position.z), step);
             float distance = Vector3.Distance(transform.position, new Vector3(targetTransform.position.x, transform.position.y, targetTransform.position.z));
-        if (distance <= distanceTolerance)                                             
+        if (distance <= distanceTolerance)
         {
+            
             if (nextUpHarvest == true)                                                // Logic of moving back and forth - and cycling the Ressources.
-            {   
-                
+            {
+               
                 nextUpHarvest = false;
-              
+
+                rssPrefab.SetActive(true);
+                if (tiles[indexToHarvest].tag == "White")
+
+                { rssPrefab.GetComponent<MeshRenderer>().material.color = new Color(1, 1, 1); }
+                else if (tiles[indexToHarvest].tag == "Blue")
+
+                { rssPrefab.GetComponent<MeshRenderer>().material.color = new Color(0, 0, 1); }
+                else if (tiles[indexToHarvest].tag == "Green")
+
+                { rssPrefab.GetComponent<MeshRenderer>().material.color = new Color(0,1,0); }
+                else if (tiles[indexToHarvest].tag == "Red")
+                { rssPrefab.GetComponent<MeshRenderer>().material.color = new Color(1, 0, 0); }
+
             }
             else if (nextUpHarvest == false)                                         // When Returning to base update RSSMgmt.
             {
@@ -75,6 +94,7 @@ public class HarvestMovement : MonoBehaviour
                 else if (tiles[indexToHarvest].tag == "Red")
                 { rssManager.UpdateRss(1, "Red"); }
 
+                rssPrefab.SetActive(false);
                 indexToHarvest++;
             if (indexToHarvest >= 6)
                 { indexToHarvest = 0; }
@@ -86,9 +106,10 @@ public class HarvestMovement : MonoBehaviour
             }
     
 
- 
-    public void SetHarvester(Harvester harvester)
+    public void SetHarvester(GameObject harvester)
     {
         harvesterBuilding = harvester;
     }
+
+ 
 }

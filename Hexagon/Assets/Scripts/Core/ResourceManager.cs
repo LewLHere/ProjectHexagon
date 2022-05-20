@@ -15,35 +15,48 @@ public class ResourceManager : MonoBehaviour
     
     void Start()
     {
-        
+        UpdateRss(0, "White");
     }
 
  
-  public void UpdateRss(int amount, string colour)
+    public int GetBlue()
+    { return rssBlue; }
+    public int GetWhite()
+    { return rssWhite; }
+    public int GetRed()
+    { return rssRed; }
+    public int GetGreen()
+    { return rssGreen; }
+    public void UpdateRss(int amount, string colour)
     {
         if(colour == "White")
         {
             rssWhite += amount;
-            textWhite.text = (""+rssWhite);
+          
         }
         else if(colour == "Green")
         {
             rssGreen += amount;
-            textGreen.text = ("" + rssGreen);
+         
         }
         else if(colour == "Blue")
         {
             rssBlue += amount;
-            textBlue.text = ("" + rssBlue);
+          
         }
         else if(colour == "Red")
         {
             rssRed += amount;
-            textRed.text = ("" + rssRed);
+           
         }
         else {
             Debug.Log("Wrong Material!");
         }
+
+        textWhite.text = ("" + rssWhite);
+        textGreen.text = ("" + rssGreen);
+        textBlue.text = ("" + rssBlue);
+        textRed.text = ("" + rssRed);
     }
 
    
