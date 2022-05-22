@@ -11,7 +11,7 @@ public class BuildManager : MonoBehaviour
    
     [SerializeField] GameObject harvesterPrefab;
     [SerializeField] GameObject towerPrefab;
-    
+    [SerializeField] GameObject forceFieldPrefab;
     [SerializeField] float yCorrect = 3.5f;
     [SerializeField] GameObject costTextGO;
     [SerializeField] TextMeshProUGUI textCost, textWhite, textBlue, textGreen, textRed;
@@ -46,27 +46,34 @@ public class BuildManager : MonoBehaviour
         }
     }
 
-  
+
     public void SelectBuildingButton(int buttonNumber)
     {
         if (buttonNumber == 1)
-        {   selectedButton = 1;
+        { selectedButton = 1;
             costTextGO.SetActive(true);
-           GetBuildingCost(harvesterPrefab, 0);
+            GetBuildingCost(harvesterPrefab, 0);
 
-           
         }
         if (buttonNumber == 2)
-        {   selectedButton = 2;
+        { selectedButton = 2;
             costTextGO.SetActive(true);
             GetBuildingCost(towerPrefab, 0);
         }
+        if (buttonNumber == 3)
+        {
+            selectedButton = 3;
+            costTextGO.SetActive(true);
+            GetBuildingCost(forceFieldPrefab, 0);
+        }
     }
-    private void TryBuildBuilding(int buildingNumber)
-    {
 
+    private void TryBuildBuilding(int buildingNumber)
+    {   // if (tileToBuild.hasMobOnIt) return;
+        if (tileToBuild.isOccupied == true && tileToBuild.GetBuilding() == null) return;
         if (toBuild.gameObject.GetComponent<Tile>() == null) { return; }
 
+       
         if (selectedButton == 0)
         { return; }
         if (selectedButton == 1)
@@ -79,14 +86,21 @@ public class BuildManager : MonoBehaviour
         {
             buildingIndex = 1;
             buildingToBuild = towerPrefab.GetComponent<Building>();
-            BuildBuilding(towerPrefab); }
-         }                                                                                  // Add When More Buildings
+            BuildBuilding(towerPrefab);
+        }
 
+        if (selectedButton == 3)
+        {
+            buildingIndex = 2;
+            buildingToBuild = forceFieldPrefab.GetComponent<Building>();
+            BuildBuilding(forceFieldPrefab);
+        }
+    }
 
     private void BuildBuilding(GameObject buildGO)
     {
 
-
+      
         if (tileToBuild.GetBuilding() == null)
         {
             if (rss.GetWhite() < buildingToBuild.GetCostWhite(0)) return;
@@ -104,9 +118,10 @@ public class BuildManager : MonoBehaviour
             tileToBuild.SetBuilding(buildingInstance.GetComponent<Building>());
             buildingInstance.GetComponent<Building>().SetTile(tileToBuild);
         }
-
+     
         else if (tileToBuild.GetBuilding().GetComponent<Building>().GetBuildingIndex() == buildingIndex)
         {
+           
             if (tileToBuild.GetBuilding().GetLevel() < tileToBuild.GetBuilding().maxLevel)
             {
                 if (rss.GetWhite() < buildingToBuild.GetCostWhite(tileToBuild.GetBuilding().GetLevel() + 1)) return;
@@ -164,4 +179,7 @@ public class BuildManager : MonoBehaviour
 
     public Building GetTower()
     { return towerPrefab.GetComponent<Building>(); }
+
+    public Building GetForceField()
+    { return forceFieldPrefab.GetComponent<Building>(); }
 }

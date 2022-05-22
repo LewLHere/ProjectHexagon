@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Building : MonoBehaviour
 {
-    [SerializeField] protected GameObject buildingPrefab;
+    [SerializeField] protected Mesh[] buildingMeshes;
    [SerializeField] protected GameObject[] neighboredTiles = new GameObject[6];
    [SerializeField] protected float minDistance = 6;
    [SerializeField] protected Tile tile;
@@ -14,37 +14,13 @@ public class Building : MonoBehaviour
    [SerializeField] protected int[] costRed= new int[5];
     [SerializeField] protected int level = 0;
    [SerializeField] protected int buildingIndex;
+   [SerializeField] protected GameObject[] rangeGO;
     protected TileGroups tg;
     protected BuildManager bm;
     public int maxLevel = 4;
 
                                                                                             // No Start() in here or it overrides all Sub-Classes.
-    public GameObject[] GetNeighboredTiles()
-    {
-        GameObject[] neighboredTilesInstance = new GameObject[6];
-        int neighboredTilesIndex = 0;
-        neighboredTiles[0] = null;
-        neighboredTiles[1] = null;
-        neighboredTiles[2] = null;
-        neighboredTiles[3] = null;
-        neighboredTiles[4] = null;
-        neighboredTiles[5] = null;
-
-
-
-        for (int i = 0; i < tg.GetAll().Count; i++)
-        {
-            float distance = Vector3.Distance(tile.transform.position, tg.GetAll()[i].transform.position);
-
-            if (distance < minDistance && distance != 0)
-            {
-                neighboredTilesInstance[neighboredTilesIndex] = tg.GetAll()[i];
-                neighboredTilesIndex++;
-            }
-        }
-        return neighboredTilesInstance;
-    }
-
+ 
   
     public Tile GetTile()
     { return tile;
@@ -81,12 +57,20 @@ public class Building : MonoBehaviour
     }
     public void IncreaseBuildingLevel()
     {
+
         if (level < maxLevel)
         {
+            Debug.Log("Level Up!");
             level++;
+            gameObject.GetComponent<MeshFilter>().mesh = buildingMeshes[level];
+
         }
         else Debug.Log("Has Max Level");
+        
     }
+
+    public GameObject[] GetRangeGO()
+    { return rangeGO; }
 
     public int GetBuildingIndex()
     { return buildingIndex; }

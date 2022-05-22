@@ -9,10 +9,11 @@ public class HarvestMovement : MonoBehaviour
     [SerializeField] float distanceTolerance = .1f;
     [SerializeField] GameObject harvesterBuilding;
     [SerializeField] int indexToHarvest = 0;
-
+    [SerializeField] float waitTime;
     [SerializeField] GameObject rssPrefab;
     Transform targetTransform;
     bool nextUpHarvest = true;
+    bool readyToMove = true;
     float speed;
     ResourceManager rssManager;
     GameObject rssInstance;
@@ -25,6 +26,7 @@ public class HarvestMovement : MonoBehaviour
 
     void Update()
     {
+        if (!readyToMove) return;
        Move();
     }
 
@@ -63,36 +65,46 @@ public class HarvestMovement : MonoBehaviour
             float distance = Vector3.Distance(transform.position, new Vector3(targetTransform.position.x, transform.position.y, targetTransform.position.z));
         if (distance <= distanceTolerance)
         {
-            
+            StartCoroutine("WaitAtLocation");
+            string colourToHarvest = tiles[indexToHarvest].tag;
             if (nextUpHarvest == true)                                                // Logic of moving back and forth - and cycling the Ressources.
             {
                
                 nextUpHarvest = false;
 
                 rssPrefab.SetActive(true);
-                if (tiles[indexToHarvest].tag == "White")
+                if (colourToHarvest == "White")
 
                 { rssPrefab.GetComponent<MeshRenderer>().material.color = new Color(1, 1, 1); }
-                else if (tiles[indexToHarvest].tag == "Blue")
+                else if (colourToHarvest == "Blue")
 
                 { rssPrefab.GetComponent<MeshRenderer>().material.color = new Color(0, 0, 1); }
-                else if (tiles[indexToHarvest].tag == "Green")
+                else if (colourToHarvest == "Green")
 
                 { rssPrefab.GetComponent<MeshRenderer>().material.color = new Color(0,1,0); }
-                else if (tiles[indexToHarvest].tag == "Red")
+                else if (colourToHarvest == "Red")
                 { rssPrefab.GetComponent<MeshRenderer>().material.color = new Color(1, 0, 0); }
 
             }
             else if (nextUpHarvest == false)                                         // When Returning to base update RSSMgmt.
             {
-                if (tiles[indexToHarvest].tag == "Blue")                    
-                { rssManager.UpdateRss(1, "Blue"); }
-                else if (tiles[indexToHarvest].tag == "White")
-                { rssManager.UpdateRss(1, "White"); }
-                else if (tiles[indexToHarvest].tag == "Green")
-                { rssManager.UpdateRss(1, "Green"); }
-                else if (tiles[indexToHarvest].tag == "Red")
-                { rssManager.UpdateRss(1, "Red"); }
+                if (colourToHarvest == "Blue")                    
+                {
+                    harvesterBuilding.GetComponent<Harvester>().SetTriggerColour(colourToHarvest);
+                    rssManager.UpdateRss(1, "Blue"); 
+                }
+                else if (colourToHarvest == "White")
+                { 
+                    
+                    rssManager.UpdateRss(1, "White"); }
+                else if (colourToHarvest == "Green")
+                {
+                    harvesterBuilding.GetComponent<Harvester>().SetTriggerColour(colourToHarvest);
+                    rssManager.UpdateRss(1, "Green"); }
+                else if (colourToHarvest == "Red")
+                {
+                    harvesterBuilding.GetComponent<Harvester>().SetTriggerColour(colourToHarvest);
+                    rssManager.UpdateRss(1, "Red"); }
 
                 rssPrefab.SetActive(false);
                 indexToHarvest++;
@@ -106,6 +118,12 @@ public class HarvestMovement : MonoBehaviour
             }
     
 
+    IEnumerator WaitAtLocation()
+    {
+        readyToMove = false;
+        yield return new WaitForSeconds(waitTime);
+        readyToMove = true;
+    }
     public void SetHarvester(GameObject harvester)
     {
         harvesterBuilding = harvester;
