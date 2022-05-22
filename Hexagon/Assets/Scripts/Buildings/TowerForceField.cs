@@ -7,10 +7,8 @@ public class TowerForceField : Building
     [SerializeField] float fireRate = .5f;
     [SerializeField] GameObject forceFieldPrefab = null;
     [SerializeField] int[] damage;
-    [SerializeField] float finalScale = 3.0f;
-    [SerializeField] float scaleSpeed = 1f;
     bool isReadyForForceField = true;
-    bool scaleForceFieldUp = false;
+    
 
     void Start()
     {

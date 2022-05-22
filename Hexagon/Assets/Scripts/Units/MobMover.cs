@@ -24,13 +24,20 @@ public class MobMover : MonoBehaviour
     [SerializeField] GameObject lastTileSpottedOn;
     TileGroups tg = null;
 
-    private void Start()
+    private void Awake()
     {
         playerLives = FindObjectOfType<PlayerLives>();
         mh = GetComponent<MobHealth>();
-        speed = startSpeed;
         spawnEnemies = FindObjectOfType<SpawnEnemies>();
         tg = FindObjectOfType<TileGroups>();
+
+    }
+    private void Start()
+    {
+
+        Debug.Log(mh);
+       
+      
         all = tg.GetAll().ToArray();
         GetNextTile();
 
@@ -72,7 +79,8 @@ public class MobMover : MonoBehaviour
             }
             else if (colour == "Green")
             {
-                mh.TakeDamage(-20);
+                StartCoroutine("WaitForHeal");
+              
             }
             else if (colour == "Red")
             {
@@ -132,6 +140,11 @@ public class MobMover : MonoBehaviour
       
     }
 
+    IEnumerator WaitForHeal()
+    {
+        yield return new WaitForSeconds(.01f);
+        mh.TakeDamage((mh.GetStartHP()/-10));
+    }
     void MobWentThrough()
     {
         playerLives.LoseLife(livesToLose);
@@ -141,6 +154,11 @@ public class MobMover : MonoBehaviour
     public GameObject GetShield()
     {
         return shieldGO;
+    }
+
+    public void SetSpeed(float speed)
+    {
+        startSpeed = speed;
     }
 }
 

@@ -14,8 +14,7 @@ public class Building : MonoBehaviour
    [SerializeField] protected int[] costRed= new int[5];
     [SerializeField] protected int level = 0;
    [SerializeField] protected int buildingIndex;
-    [SerializeField] protected float[] range = new float[5];
-    [SerializeField] protected GameObject[] rangeGO;
+   [SerializeField] protected GameObject[] rangeGO;
     protected TileGroups tg;
     protected BuildManager bm;
     public int maxLevel = 4;

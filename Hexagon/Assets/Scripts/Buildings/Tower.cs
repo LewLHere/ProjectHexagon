@@ -8,12 +8,14 @@ public class Tower : Building
     [SerializeField] float fireRate = .5f;
     [SerializeField] GameObject projectilePrefab;
     [SerializeField] MobHealth[] mobsInRange;
+    [SerializeField] int[] damage;
+    [SerializeField] Animator anim;
     GameObject target;
     bool readyToShoot = true;
     private void Start()
     {
         mobsInRange = new MobHealth[300];
-       
+        anim = GetComponentInChildren<Animator>();
         bm = FindObjectOfType<BuildManager>();
         tg = FindObjectOfType<TileGroups>();
         neighboredTiles = tile.GetNeighboredTiles(tile.gameObject);
@@ -44,6 +46,7 @@ public class Tower : Building
       
         if (!readyToShoot) { return; }
         StartCoroutine("ShootRoutine", target);
+        anim.SetTrigger("Shoot");
        
     }
 
@@ -54,13 +57,16 @@ public class Tower : Building
         readyToShoot = false;
         GameObject projectileInstance = Instantiate(projectilePrefab, gameObject.transform.position, Quaternion.identity);
         projectileInstance.GetComponent<Projectile>().SetTarget(target);               // Random Target instead of mobs[0]!!! - or the one with shortest Distance!
-        projectileInstance.GetComponent<Projectile>().SetSpeed(level);                                           // Not used currently
+        projectileInstance.GetComponent<Projectile>().SetSpeed(level);                       // Not used currently
+        projectileInstance.GetComponent<Projectile>().SetDamage(damage[level]);
         projectileInstance.GetComponent<Projectile>().projectileType = tile.tag;
 
         yield return new WaitForSeconds(fireRate);
 
         readyToShoot = true;
     }
+
+ 
  }
 
 

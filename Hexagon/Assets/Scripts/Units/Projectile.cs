@@ -8,6 +8,7 @@ public class Projectile : MonoBehaviour
     [SerializeField] float baseSpeed = 10;
     [SerializeField] float speed = 5;
     [SerializeField] int baseDamage = 5;
+    [SerializeField] int damageRange = 3;
     public string projectileType;
     private void LateUpdate()
     {
@@ -43,7 +44,9 @@ public class Projectile : MonoBehaviour
             {
                 multiplier = 2;
             }
-        projectileDamage = baseDamage * multiplier;
+            System.Random rnd = new System.Random();
+            projectileDamage = rnd.Next((baseDamage * multiplier) - damageRange, (baseDamage * multiplier) + damageRange);
+       
        
         other.GetComponentInParent<MobHealth>().TakeDamage(projectileDamage);
         Destroy(gameObject);
@@ -73,6 +76,11 @@ public class Projectile : MonoBehaviour
     public void SetSpeed(int level)
     { 
         speed = baseSpeed * 1;
+    }
+
+    public void SetDamage(int damage)
+    {
+        baseDamage = damage;
     }
 }
 

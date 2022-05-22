@@ -66,36 +66,45 @@ public class HarvestMovement : MonoBehaviour
         if (distance <= distanceTolerance)
         {
             StartCoroutine("WaitAtLocation");
-            
+            string colourToHarvest = tiles[indexToHarvest].tag;
             if (nextUpHarvest == true)                                                // Logic of moving back and forth - and cycling the Ressources.
             {
                
                 nextUpHarvest = false;
 
                 rssPrefab.SetActive(true);
-                if (tiles[indexToHarvest].tag == "White")
+                if (colourToHarvest == "White")
 
                 { rssPrefab.GetComponent<MeshRenderer>().material.color = new Color(1, 1, 1); }
-                else if (tiles[indexToHarvest].tag == "Blue")
+                else if (colourToHarvest == "Blue")
 
                 { rssPrefab.GetComponent<MeshRenderer>().material.color = new Color(0, 0, 1); }
-                else if (tiles[indexToHarvest].tag == "Green")
+                else if (colourToHarvest == "Green")
 
                 { rssPrefab.GetComponent<MeshRenderer>().material.color = new Color(0,1,0); }
-                else if (tiles[indexToHarvest].tag == "Red")
+                else if (colourToHarvest == "Red")
                 { rssPrefab.GetComponent<MeshRenderer>().material.color = new Color(1, 0, 0); }
 
             }
             else if (nextUpHarvest == false)                                         // When Returning to base update RSSMgmt.
             {
-                if (tiles[indexToHarvest].tag == "Blue")                    
-                { rssManager.UpdateRss(1, "Blue"); }
-                else if (tiles[indexToHarvest].tag == "White")
-                { rssManager.UpdateRss(1, "White"); }
-                else if (tiles[indexToHarvest].tag == "Green")
-                { rssManager.UpdateRss(1, "Green"); }
-                else if (tiles[indexToHarvest].tag == "Red")
-                { rssManager.UpdateRss(1, "Red"); }
+                if (colourToHarvest == "Blue")                    
+                {
+                    harvesterBuilding.GetComponent<Harvester>().SetTriggerColour(colourToHarvest);
+                    rssManager.UpdateRss(1, "Blue"); 
+                }
+                else if (colourToHarvest == "White")
+                { 
+                    
+                    rssManager.UpdateRss(1, "White"); }
+                else if (colourToHarvest == "Green")
+                {
+                    harvesterBuilding.GetComponent<Harvester>().SetTriggerColour(colourToHarvest);
+                    rssManager.UpdateRss(1, "Green"); }
+                else if (colourToHarvest == "Red")
+                {
+                    harvesterBuilding.GetComponent<Harvester>().SetTriggerColour(colourToHarvest);
+                    rssManager.UpdateRss(1, "Red"); }
 
                 rssPrefab.SetActive(false);
                 indexToHarvest++;

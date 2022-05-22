@@ -111,4 +111,6 @@ MonoBehaviour:
   targetMob: {fileID: 0}
   baseSpeed: 20
   speed: 10
-  projectileDamage: 5
+  baseDamage: 5
+  damageRange: 1
+  projectileType: 

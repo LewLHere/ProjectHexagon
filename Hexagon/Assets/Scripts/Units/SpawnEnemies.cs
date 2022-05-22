@@ -10,6 +10,8 @@ public class SpawnEnemies : MonoBehaviour
     [SerializeField] int[] waveSize;
     [SerializeField] float[] timeBetweenMobs;
     [SerializeField] float[] timeBetweenWaves;
+    [SerializeField] float[] speed;
+    [SerializeField] int[] hp;
     [SerializeField] int wavesPerBoard;
     [SerializeField] int wavesOnCurrentBoard;
     [SerializeField] GameObject randomSpawnTile;
@@ -17,7 +19,6 @@ public class SpawnEnemies : MonoBehaviour
     [SerializeField] List<GameObject> spawnTileList;
     [SerializeField] List<GameObject> finishTileList;
     [SerializeField] GameObject mobPrefab = null;
-    [SerializeField] bool hasSpawnTile = false;
     [SerializeField] int indexToSpawn;
     [SerializeField] TextMeshProUGUI countdownText;
     [SerializeField] TextMeshProUGUI currentWave;
@@ -50,7 +51,7 @@ public class SpawnEnemies : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            SpawnEnemy();
+            SpawnEnemy(waveNumber);
         }
     }
 
@@ -67,7 +68,7 @@ public class SpawnEnemies : MonoBehaviour
         while (mobsSpawnedThisWave <= waveSize[wave])
         {
             countdownText.text = "Mobs remaining: " + (waveSize[wave] - mobsSpawnedThisWave);
-            SpawnEnemy();
+            SpawnEnemy(waveNumber);
             mobsSpawnedThisWave++;
          
 
@@ -103,7 +104,7 @@ public class SpawnEnemies : MonoBehaviour
 
     }
  
-    private void SpawnEnemy()
+    private void SpawnEnemy(int waveNumber)
     {
 
         int y = 0;
@@ -127,10 +128,16 @@ public class SpawnEnemies : MonoBehaviour
         {
             GameObject mobInstance;
             mobInstance = Instantiate(mobPrefab, new Vector3(randomSpawnTile.transform.position.x, 2.5f, randomSpawnTile.transform.position.z), Quaternion.identity); //gogo
+            mobInstance.GetComponent<MobMover>().SetSpeed(speed[waveNumber]);
+            mobInstance.GetComponent<MobHealth>().SetHP(hp[waveNumber]);
+
             mobInstance.GetComponent<MobMover>().SetLastSpottedOn(randomSpawnTile);
         }
             }
-        }
+
+    public int GetWave()
+    { return waveNumber; }
+  }
     
 
 

@@ -9,9 +9,10 @@ public class Harvester : Building
     [SerializeField] float timeToResend;
     [SerializeField] float timeToWaitAtTile;
     ResourceManager resourceManager;
-
+    Animator anim;
     private void Start()
     {
+        anim = GetComponent<Animator>();
         resourceManager = FindObjectOfType<ResourceManager>();
         bm = FindObjectOfType<BuildManager>();
         tg = FindObjectOfType<TileGroups>();
@@ -47,6 +48,10 @@ public class Harvester : Building
 
     }
 
-   
+
+    public void SetTriggerColour(string triggerColour)
+    {
+        anim.SetTrigger(triggerColour);
+    }
 
 }

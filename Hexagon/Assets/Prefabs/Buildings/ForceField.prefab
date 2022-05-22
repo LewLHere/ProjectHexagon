@@ -211,16 +211,8 @@ MonoBehaviour:
   costRed: 0100000002000000030000000400000005000000
   level: 0
   buildingIndex: 0
-  range:
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
   rangeGO: []
   maxLevel: 4
-  fireRate: 2
+  fireRate: 0.5
   forceFieldPrefab: {fileID: 7133489177124173855}
-  damage: 0a0000000f00000014000000190000001e000000
-  finalScale: 3
-  scaleSpeed: 1
+  damage: 0100000002000000030000000400000005000000
