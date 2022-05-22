@@ -9,10 +9,11 @@ public class HarvestMovement : MonoBehaviour
     [SerializeField] float distanceTolerance = .1f;
     [SerializeField] GameObject harvesterBuilding;
     [SerializeField] int indexToHarvest = 0;
-
+    [SerializeField] float waitTime;
     [SerializeField] GameObject rssPrefab;
     Transform targetTransform;
     bool nextUpHarvest = true;
+    bool readyToMove = true;
     float speed;
     ResourceManager rssManager;
     GameObject rssInstance;
@@ -25,6 +26,7 @@ public class HarvestMovement : MonoBehaviour
 
     void Update()
     {
+        if (!readyToMove) return;
        Move();
     }
 
@@ -63,6 +65,7 @@ public class HarvestMovement : MonoBehaviour
             float distance = Vector3.Distance(transform.position, new Vector3(targetTransform.position.x, transform.position.y, targetTransform.position.z));
         if (distance <= distanceTolerance)
         {
+            StartCoroutine("WaitAtLocation");
             
             if (nextUpHarvest == true)                                                // Logic of moving back and forth - and cycling the Ressources.
             {
@@ -106,6 +109,12 @@ public class HarvestMovement : MonoBehaviour
             }
     
 
+    IEnumerator WaitAtLocation()
+    {
+        readyToMove = false;
+        yield return new WaitForSeconds(waitTime);
+        readyToMove = true;
+    }
     public void SetHarvester(GameObject harvester)
     {
         harvesterBuilding = harvester;

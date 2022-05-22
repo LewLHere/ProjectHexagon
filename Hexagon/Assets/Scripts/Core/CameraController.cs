@@ -44,8 +44,11 @@ public class CameraController : MonoBehaviour
 
     void LateUpdate()
     {
-        if(cameraIsDefault)
-        mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, 15+tg.GetCurrentBoardSize()*8, mainCamera.transform.position.z);
+        if (cameraIsDefault)
+        {
+            mainCamera.orthographicSize = 10 + tg.GetCurrentBoardSize() * 5;
+        }
+       // mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, 15+tg.GetCurrentBoardSize()*8, mainCamera.transform.position.z);
     }
 
     public void SetCameraDefault()
@@ -54,6 +57,7 @@ public class CameraController : MonoBehaviour
     }
     void ZoomIn(Transform transform)
     {
-        mainCamera.transform.position = new Vector3(transform.position.x, 15f, transform.position.z);
+        mainCamera.orthographicSize = 10;
+        mainCamera.transform.position = new Vector3(transform.position.x, mainCamera.transform.position.y, transform.position.z);
     }
 }

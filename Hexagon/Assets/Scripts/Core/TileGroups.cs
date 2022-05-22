@@ -24,7 +24,7 @@ public class TileGroups : MonoBehaviour
         CreateTileGroups();
         DeactivateBoard(all);
         startTile.gameObject.SetActive(true);
-
+        IncreaseBoardSize();
     }
 
  
@@ -33,12 +33,17 @@ public class TileGroups : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            if (currentBoardSize <= maxSize)
-            {
-                cameraController.SetCameraDefault();
-                currentBoardSize++;
-                GetCurrentBoard();
-            }
+            IncreaseBoardSize();
+        }
+    }
+
+    public void IncreaseBoardSize()
+    {
+        if (currentBoardSize <= maxSize)
+        {
+            cameraController.SetCameraDefault();
+            currentBoardSize++;
+            GetCurrentBoard();
         }
     }
 

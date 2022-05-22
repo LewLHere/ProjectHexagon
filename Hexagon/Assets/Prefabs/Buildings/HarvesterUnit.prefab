@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8792416368469651369}
   - component: {fileID: 5971859569640449668}
   - component: {fileID: 3834269329119995211}
+  - component: {fileID: 6273905622549040029}
   m_Layer: 2
   m_Name: Capsule
   m_TagString: Untagged
@@ -96,6 +97,17 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!210 &6273905622549040029
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2567282367461093244}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
 --- !u!1 &7006035345659460091
 GameObject:
   m_ObjectHideFlags: 0
@@ -152,6 +164,7 @@ MonoBehaviour:
   distanceTolerance: 0.1
   harvesterBuilding: {fileID: 0}
   indexToHarvest: 0
+  waitTime: 1
   rssPrefab: {fileID: 8723092823380979234}
 --- !u!1 &8723092823380979234
 GameObject:

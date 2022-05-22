@@ -7,22 +7,48 @@ public class Projectile : MonoBehaviour
     public MobHealth targetMob;
     [SerializeField] float baseSpeed = 10;
     [SerializeField] float speed = 5;
-    [SerializeField] int projectileDamage = 5;
-
+    [SerializeField] int baseDamage = 5;
+    public string projectileType;
     private void LateUpdate()
     {
-            Move();  
+        Move();
     }
 
-     private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
+    {
+        int multiplier = 2;
+        int projectileDamage;
+        if (other.GetComponentInParent<MobHealth>() != targetMob) return;
+        if (other.tag == "Mob")
         {
-            if (other.tag == "Mob")
+            string otherColour = other.gameObject.GetComponentInParent<MobMover>().colour;
+           
+            if (otherColour == projectileType)
             {
-            Debug.Log("TookDamage");
-                other.GetComponentInParent<MobHealth>().TakeDamage(projectileDamage);
-                Destroy(gameObject); 
+                multiplier = 2;
             }
-        }
+            else if (otherColour == "Green" && projectileType == "Red" ||
+                        otherColour == "Blue" && projectileType == "Green" ||
+                    otherColour == "Red" && projectileType == "Blue")
+            {
+                multiplier = 3;
+            }
+            else if (otherColour == "Red" && projectileType == "Green" ||
+                        otherColour == "Green" && projectileType == "Blue" ||
+                    otherColour == "Blue" && projectileType == "Red")
+            {
+                multiplier = 1;
+            }
+            else
+            {
+                multiplier = 2;
+            }
+        projectileDamage = baseDamage * multiplier;
+       
+        other.GetComponentInParent<MobHealth>().TakeDamage(projectileDamage);
+        Destroy(gameObject);
+    }
+}
 
         private void Move()
         {  
@@ -46,7 +72,7 @@ public class Projectile : MonoBehaviour
     }
     public void SetSpeed(int level)
     { 
-        speed = baseSpeed * (level+1);
+        speed = baseSpeed * 1;
     }
 }
 

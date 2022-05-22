@@ -47,3 +47,21 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 1242661391
+    locked: 0
+  - name: Tiles
+    uniqueID: 130331955
+    locked: 0
+  - name: Units
+    uniqueID: 433496705
+    locked: 0
+  - name: Projectile
+    uniqueID: 492390801
+    locked: 0
+  - name: Buildings
+    uniqueID: 3496015719
+    locked: 0
+  - name: VFX
+    uniqueID: 4209389411
+    locked: 0

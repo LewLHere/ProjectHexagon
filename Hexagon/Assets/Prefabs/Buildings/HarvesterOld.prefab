@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7982717288391861735}
   - component: {fileID: 3896334551646317973}
   m_Layer: 2
-  m_Name: Harvester
+  m_Name: HarvesterOld
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

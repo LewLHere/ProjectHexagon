@@ -13,16 +13,21 @@ public class MobMover : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField] float startSpeed = 5f;
     [SerializeField] float timeAtTile = .5f;
+    [SerializeField] GameObject shieldGO;
+    [SerializeField] int livesToLose = 1;
     SpawnEnemies spawnEnemies;
 
-  
+    public string colour;
+    MobHealth mh;
     GameObject[] all;
-   
+    PlayerLives playerLives;
     [SerializeField] GameObject lastTileSpottedOn;
     TileGroups tg = null;
 
     private void Start()
     {
+        playerLives = FindObjectOfType<PlayerLives>();
+        mh = GetComponent<MobHealth>();
         speed = startSpeed;
         spawnEnemies = FindObjectOfType<SpawnEnemies>();
         tg = FindObjectOfType<TileGroups>();
@@ -47,34 +52,47 @@ public class MobMover : MonoBehaviour
     }
 
 
-    private void CheckTileType()
-    {
-        string colour = currentTarget.tag;
-        gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
-
-        if (colour == "White")
-        {
-            speed = startSpeed;
-        }
-        else if (colour == "Blue")
-        {
-            speed = .5f * startSpeed;
-        }
-        else if(colour == "Green")
-        {
-            gameObject.transform.localScale = new Vector3(1.5f, 1f, 1.5f);
-        }
-        else if(colour == "Red")
-        {
-            speed = 2 * startSpeed;
-        }
-    }
-
-    private void MoveToTarget()
+    private void OnTriggerEnter(Collider other)
     {
        
+        if(other.gameObject.tag == "White" || other.gameObject.tag == "Blue" || other.gameObject.tag == "Green" || other.gameObject.tag == "Red")
+        {
+            colour = other.gameObject.tag;                                             // Default Settings.
+            gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+            speed = startSpeed;
+            shieldGO.SetActive(false);
+
+            if (colour == "White")
+            {
+                speed = startSpeed;
+            }
+            else if (colour == "Blue")
+            {
+                shieldGO.SetActive(true);
+            }
+            else if (colour == "Green")
+            {
+                mh.TakeDamage(-20);
+            }
+            else if (colour == "Red")
+            {
+                speed = 1.2f * startSpeed;
+            }
+        }
+
+        
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "White" || other.gameObject.tag == "Blue" || other.gameObject.tag == "Green" || other.gameObject.tag == "Red")
+            {
+            other.gameObject.GetComponent<Tile>().RemoveMobFromTileList(GetComponent<MobHealth>().GetIndexOnTile());
+            }
+    }
+    private void MoveToTarget()
+    {
         transform.position = Vector3.MoveTowards(transform.position, new Vector3(currentTarget.transform.position.x, spawnEnemies.tileHeight, currentTarget.transform.position.z), Time.deltaTime * speed);
-            
     }
 
     public void SetLastSpottedOn(GameObject go)
@@ -83,11 +101,10 @@ public class MobMover : MonoBehaviour
     }
     private void GetNextTile()
     {
-
         lastTileSpottedOn = currentTarget;
 
         int index = 0;
-      
+
         for (int i = 0; i < all.Length; i++)
         {
             float distance = Vector3.Distance(new Vector3(gameObject.transform.position.x, 0, gameObject.transform.position.z), all[i].transform.position);                    // Get Distance
@@ -95,8 +112,8 @@ public class MobMover : MonoBehaviour
 
             if (distance <= distanceOfTwoTiles && zDistance > distanceOfTwoTiles / 6)                           // Only Get Tiles further Negative-Z than currentTile.             
             {
-                    closestTiles[index] = all[i];
-                    index++;
+                closestTiles[index] = all[i];
+                index++;
             }
         }
         if (!closestTiles[0].activeSelf)                                                                    // if either of the 2 current potential Targets is not Active, pick the other one as the go-to-next-target.
@@ -112,14 +129,18 @@ public class MobMover : MonoBehaviour
         {
             MobWentThrough();
         }
-
-            CheckTileType();
-
+      
     }
 
     void MobWentThrough()
     {
+        playerLives.LoseLife(livesToLose);
         Destroy(gameObject);
     }
+
+    public GameObject GetShield()
+    {
+        return shieldGO;
     }
+}
 
