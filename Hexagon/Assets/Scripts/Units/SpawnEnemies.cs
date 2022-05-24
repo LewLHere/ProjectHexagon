@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class SpawnEnemies : MonoBehaviour
 {
@@ -12,25 +13,37 @@ public class SpawnEnemies : MonoBehaviour
     [SerializeField] float[] timeBetweenWaves;
     [SerializeField] float[] speed;
     [SerializeField] int[] hp;
+    [SerializeField] int[] hpMultiplier;
+
     [SerializeField] int wavesPerBoard;
     [SerializeField] int wavesOnCurrentBoard;
     [SerializeField] GameObject randomSpawnTile;
     
     [SerializeField] List<GameObject> spawnTileList;
     [SerializeField] List<GameObject> finishTileList;
-    [SerializeField] GameObject mobPrefab = null;
+    [SerializeField] GameObject[] mobPrefab = null;
     [SerializeField] int indexToSpawn;
     [SerializeField] TextMeshProUGUI countdownText;
     [SerializeField] TextMeshProUGUI currentWave;
+    int difficulty;
     float countdown;
     public float tileHeight = 2.5f;
     TileGroups tg;
     bool readyForNextWave;
     bool updateCountdownNow;
     System.Random rnd;
+    CameraController mainCamera;
+    ManageScene manageScene;
 
+    private void Awake()
+    {
+       
+    }
     private void Start()
     {
+        manageScene = FindObjectOfType<ManageScene>();
+        difficulty = manageScene.GetDifficulty();
+        mainCamera = FindObjectOfType<CameraController>();
         tg = FindObjectOfType<TileGroups>();
 
         StartCoroutine("StartWave", 0);
@@ -51,7 +64,7 @@ public class SpawnEnemies : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            SpawnEnemy(waveNumber);
+            SpawnEnemy(waveNumber, 0);
         }
     }
 
@@ -62,21 +75,35 @@ public class SpawnEnemies : MonoBehaviour
     {
         currentWave.text = "Current wave: " + wave;
         readyForNextWave = false;
-      
-       int mobsSpawnedThisWave = 0;
-        wavesOnCurrentBoard++;
-        while (mobsSpawnedThisWave <= waveSize[wave])
+        if (wave == 0)
         {
-            countdownText.text = "Mobs remaining: " + (waveSize[wave] - mobsSpawnedThisWave);
-            SpawnEnemy(waveNumber);
+             yield return new WaitForSeconds(3); 
+        }
+       int mobsSpawnedThisWave = 0;
+       wavesOnCurrentBoard++;
+        while (mobsSpawnedThisWave < waveSize[wave])
+        {
+            
+            SpawnEnemy(waveNumber,0);
             mobsSpawnedThisWave++;
-         
+            countdownText.text = "Mobs remaining: " + (waveSize[wave] - mobsSpawnedThisWave);
+            if (mobsSpawnedThisWave == waveSize[wave])
+            {
+                StartCoroutine("StartCountdown");
 
+            }
             yield return new WaitForSeconds(timeBetweenMobs[wave]);
             
         }
-        StartCoroutine("StartCountdown");
-        yield return new WaitForSeconds(timeBetweenWaves[wave]);
+        if (wavesOnCurrentBoard >= wavesPerBoard)
+        {
+            {
+                mainCamera.SetDefaultSize(tg.GetCurrentBoardSize() + 1);
+            }
+        }
+
+
+        yield return new WaitForSeconds(timeBetweenWaves[wave] - timeBetweenMobs[wave]);
         updateCountdownNow = false;
         waveNumber++;
         if (wavesOnCurrentBoard >= wavesPerBoard)
@@ -104,7 +131,7 @@ public class SpawnEnemies : MonoBehaviour
 
     }
  
-    private void SpawnEnemy(int waveNumber)
+    public void SpawnEnemy(int waveNumber, int enemyTier)
     {
 
         int y = 0;
@@ -127,9 +154,9 @@ public class SpawnEnemies : MonoBehaviour
         if (randomSpawnTile != null)
         {
             GameObject mobInstance;
-            mobInstance = Instantiate(mobPrefab, new Vector3(randomSpawnTile.transform.position.x, 2.5f, randomSpawnTile.transform.position.z), Quaternion.identity); //gogo
+            mobInstance = Instantiate(mobPrefab[enemyTier], new Vector3(randomSpawnTile.transform.position.x, 2.5f, randomSpawnTile.transform.position.z+1.5f), Quaternion.identity); //gogo
             mobInstance.GetComponent<MobMover>().SetSpeed(speed[waveNumber]);
-            mobInstance.GetComponent<MobHealth>().SetHP(hp[waveNumber]);
+            mobInstance.GetComponent<MobHealth>().SetHP(hpMultiplier[difficulty]*hp[waveNumber] + hp[waveNumber] * 2 * enemyTier );
 
             mobInstance.GetComponent<MobMover>().SetLastSpottedOn(randomSpawnTile);
         }

@@ -9,36 +9,16 @@ public class Tower : Building
     [SerializeField] GameObject projectilePrefab;
     [SerializeField] MobHealth[] mobsInRange;
     [SerializeField] int[] damage;
-    [SerializeField] Animator anim;
+  
     GameObject target;
     bool readyToShoot = true;
     private void Start()
     {
         mobsInRange = new MobHealth[300];
-        anim = GetComponentInChildren<Animator>();
         bm = FindObjectOfType<BuildManager>();
         tg = FindObjectOfType<TileGroups>();
         neighboredTiles = tile.GetNeighboredTiles(tile.gameObject);
         buildingIndex = 1;
-        
-
-   
-
-       
-    }
-
-    private void Update()
-    {
-        if (!readyToShoot) { return; }
-
-        System.Random rnd = new System.Random();
-       if (mobsInRange[rnd.Next(mobsInRange.Length)] == null)
-        { return; }
-        target = mobsInRange[rnd.Next(mobsInRange.Length)].gameObject;
-           
-        if (target = null) return;
-
-        StartCoroutine("ShootRoutine", target);
     }
 
     public void TryShoot(MobHealth target)

@@ -12,6 +12,7 @@ public class BuildManager : MonoBehaviour
     [SerializeField] GameObject harvesterPrefab;
     [SerializeField] GameObject towerPrefab;
     [SerializeField] GameObject forceFieldPrefab;
+    [SerializeField] GameObject pulsePrefab;
     [SerializeField] float yCorrect = 3.5f;
     [SerializeField] GameObject costTextGO;
     [SerializeField] TextMeshProUGUI textCost, textWhite, textBlue, textGreen, textRed;
@@ -66,6 +67,12 @@ public class BuildManager : MonoBehaviour
             costTextGO.SetActive(true);
             GetBuildingCost(forceFieldPrefab, 0);
         }
+        if (buttonNumber == 4)
+        {
+            selectedButton = 4;
+            costTextGO.SetActive(true);
+            GetBuildingCost(pulsePrefab, 0);
+        }
     }
 
     private void TryBuildBuilding(int buildingNumber)
@@ -95,11 +102,19 @@ public class BuildManager : MonoBehaviour
             buildingToBuild = forceFieldPrefab.GetComponent<Building>();
             BuildBuilding(forceFieldPrefab);
         }
+        if (selectedButton == 4)
+        {
+
+            buildingIndex = 3;
+            buildingToBuild = pulsePrefab.GetComponent<Building>();
+            BuildBuilding(pulsePrefab);
+            Debug.Log(buildingIndex);
+        }
     }
 
     private void BuildBuilding(GameObject buildGO)
     {
-
+       
       
         if (tileToBuild.GetBuilding() == null)
         {
@@ -117,6 +132,8 @@ public class BuildManager : MonoBehaviour
             GameObject buildingInstance = Instantiate(buildGO, new Vector3(toBuild.position.x, yCorrect, toBuild.position.z), Quaternion.identity);
             tileToBuild.SetBuilding(buildingInstance.GetComponent<Building>());
             buildingInstance.GetComponent<Building>().SetTile(tileToBuild);
+            tileToBuild.GetBuilding().BuildFirstLevel();
+            
         }
      
         else if (tileToBuild.GetBuilding().GetComponent<Building>().GetBuildingIndex() == buildingIndex)
@@ -182,4 +199,7 @@ public class BuildManager : MonoBehaviour
 
     public Building GetForceField()
     { return forceFieldPrefab.GetComponent<Building>(); }
+
+    public Building GetPulse()
+    { return pulsePrefab.GetComponent<Building>(); }
 }

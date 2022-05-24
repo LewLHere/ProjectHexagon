@@ -10,6 +10,7 @@ TagManager:
   - Blue
   - White
   - Mob
+  - Pulse
   layers:
   - Default
   - TransparentFX

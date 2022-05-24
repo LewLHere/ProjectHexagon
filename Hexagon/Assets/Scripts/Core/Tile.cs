@@ -11,6 +11,7 @@ public class Tile : MonoBehaviour
     [SerializeField] GameObject hoveringHarvester;
     [SerializeField] GameObject hoveringTower;
     [SerializeField] GameObject hoveringForceField;
+    [SerializeField] GameObject hoveringPulse;
     [SerializeField] GameObject harvestedOnPrefab;
     Material startingMaterial;
     GameObject hoverInstance;
@@ -65,6 +66,7 @@ public class Tile : MonoBehaviour
 
     private void OnMouseEnter()
     {
+        Debug.Log("Mouse on here");
         if (bm.GetButtonSelected() == 0)
         {
             hoverInstance = Instantiate(hoveringEmpty, new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Quaternion.identity);
@@ -80,6 +82,10 @@ public class Tile : MonoBehaviour
         else if (bm.GetButtonSelected() == 3)
         {
             hoverInstance = Instantiate(hoveringForceField, new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Quaternion.identity);
+        }
+        else if (bm.GetButtonSelected() == 4)
+        {
+            hoverInstance = Instantiate(hoveringPulse, new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Quaternion.identity);
         }
 
 
@@ -103,6 +109,8 @@ public class Tile : MonoBehaviour
 
             if (bm.GetButtonSelected() == 3)                                                    // For more towers.
             { bm.GetBuildingCost(bm.GetForceField().gameObject, 0); }
+        if (bm.GetButtonSelected() == 4)                                                    // For more towers.
+            { bm.GetBuildingCost(bm.GetPulse().gameObject, 0); }
 
     }
     private void OnTriggerEnter(Collider other)
@@ -117,7 +125,7 @@ public class Tile : MonoBehaviour
             {
                     if(mobsOnThisTile[i] != null) { continue; }
 
-                    mobsOnThisTile[i] = other.GetComponent<MobHealth>();
+                    mobsOnThisTile[i] = other.GetComponentInParent<MobHealth>();
                     other.GetComponent<MobHealth>().SetIndexOnTile(i);
                     return;
                 }
@@ -207,6 +215,7 @@ public class Tile : MonoBehaviour
     }
     public Building GetBuilding()
     {
+        
         return building;
     }
   

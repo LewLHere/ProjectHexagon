@@ -9,15 +9,20 @@ public class HexaTrigger : MonoBehaviour
     {
         if (other.tag == "Mob")
         {
+
             if (parentBuilding.GetComponent<Tower>() != null)
             {
-               
                 parentBuilding.GetComponent<Tower>().TryShoot(other.GetComponentInParent<MobHealth>());
             }
             else if (parentBuilding.GetComponent<TowerForceField>() != null)
             {
                 parentBuilding.GetComponent<TowerForceField>().TryForceFieldOn();
             }
+            else if (parentBuilding.GetComponent<TowerPulse>() != null)
+            {
+                      parentBuilding.GetComponent<TowerPulse>().TryToPulse();
+            }
+            }
         }
     }
-}
+

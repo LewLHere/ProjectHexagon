@@ -43,6 +43,7 @@ public class TileGroups : MonoBehaviour
         {
             cameraController.SetCameraDefault();
             currentBoardSize++;
+            
             GetCurrentBoard();
         }
     }

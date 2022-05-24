@@ -10,36 +10,34 @@ public class MobHealth : MonoBehaviour
     int currentHealth;
     [SerializeField] TextMeshProUGUI hpText;
     [SerializeField] Canvas enemyDisplay;
-
+    GameObject pulseZone;
+    bool readyToBePulsed = true;
     int level;
+    Animator anim;
     
     MobMover mob;
     int indexOnTile;
     void Start()
     {
+        anim = GetComponent<Animator>();
         currentHealth = startHealth;
         hpText.text = "" + currentHealth;
         enemyDisplay.transform.rotation = FindObjectOfType<Camera>().transform.rotation;
         mob = GetComponent<MobMover>();
+        
     }
-
-   
-    void Update()
-    {
-       
-    }
-
-    public void TakeDamage(int damage)
+  
+      public void TakeDamage(int damage)
     {
       
         if (mob.GetShield().activeSelf != true)
         {
             currentHealth -= damage;
-            Debug.Log(damage);
+           
         }
         else if (mob.GetShield().activeSelf == true)
         {
-            Debug.Log("Shield Gone!");
+           
             mob.GetShield().SetActive(false);
         }
 
