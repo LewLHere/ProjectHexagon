@@ -12,21 +12,22 @@ public class MobMover : MonoBehaviour
     [SerializeField] float distanceOfTwoTiles = 6f;
     [SerializeField] float speed;
     [SerializeField] float startSpeed = 5f;
-    [SerializeField] float timeAtTile = .5f;
+    [SerializeField] float redMultiplier;
     [SerializeField] GameObject shieldGO;
-    [SerializeField] int livesToLose = 1;
+    [SerializeField] int tier;
     SpawnEnemies spawnEnemies;
+    ManageScene manageScene;
 
     public string colour;
     MobHealth mh;
     GameObject[] all;
-    PlayerLives playerLives;
+   
     [SerializeField] GameObject lastTileSpottedOn;
     TileGroups tg = null;
 
     private void Awake()
     {
-        playerLives = FindObjectOfType<PlayerLives>();
+      
         mh = GetComponent<MobHealth>();
         spawnEnemies = FindObjectOfType<SpawnEnemies>();
         tg = FindObjectOfType<TileGroups>();
@@ -35,8 +36,8 @@ public class MobMover : MonoBehaviour
     private void Start()
     {
 
-        Debug.Log(mh);
-       
+
+        manageScene = FindObjectOfType<ManageScene>();
       
         all = tg.GetAll().ToArray();
         GetNextTile();
@@ -84,7 +85,7 @@ public class MobMover : MonoBehaviour
             }
             else if (colour == "Red")
             {
-                speed = 1.2f * startSpeed;
+                speed = redMultiplier * startSpeed;
             }
         }
 
@@ -97,6 +98,10 @@ public class MobMover : MonoBehaviour
             {
             other.gameObject.GetComponent<Tile>().RemoveMobFromTileList(GetComponent<MobHealth>().GetIndexOnTile());
             }
+        if (!closestTiles[0].activeSelf && !closestTiles[1].activeSelf)
+        {
+            MobWentThrough();
+        }
     }
     private void MoveToTarget()
     {
@@ -124,19 +129,21 @@ public class MobMover : MonoBehaviour
                 index++;
             }
         }
-        if (!closestTiles[0].activeSelf)                                                                    // if either of the 2 current potential Targets is not Active, pick the other one as the go-to-next-target.
+
+        if (closestTiles[0] != null && closestTiles[1] == null)
+        { currentTarget = closestTiles[0]; }
+        else if (closestTiles[1] != null && closestTiles[0] == null)
         { currentTarget = closestTiles[1]; }
-        else if (!closestTiles[1].activeSelf)
+        else if (!closestTiles[0].activeSelf)                                                                    // if either of the 2 current potential Targets is not Active, pick the other one as the go-to-next-target.
+        { currentTarget = closestTiles[1]; }
+        else if (!closestTiles[1].activeSelf)                                                                    // if either of the 2 current potential Targets is not Active, pick the other one as the go-to-next-target.
         { currentTarget = closestTiles[0]; }
         else if (closestTiles[0].activeSelf && closestTiles[1].activeSelf)
         {
             System.Random rnd = new System.Random();
             currentTarget = closestTiles[rnd.Next(2)];
         }
-        if (!closestTiles[0].activeSelf && !closestTiles[1].activeSelf)
-        {
-            MobWentThrough();
-        }
+      
       
     }
 
@@ -147,7 +154,14 @@ public class MobMover : MonoBehaviour
     }
     void MobWentThrough()
     {
-        playerLives.LoseLife(livesToLose);
+        if (tier == 0)
+        {
+            spawnEnemies.SpawnEnemy(spawnEnemies.GetWave(), 1);
+        }
+        if (tier == 1)
+        {
+            manageScene.GameOver();
+        }
         Destroy(gameObject);
     }
 

@@ -4,8 +4,16 @@ using UnityEngine;
 
 public class Building : MonoBehaviour
 {
-    [SerializeField] protected Mesh[] buildingMeshes;
-   [SerializeField] protected GameObject[] neighboredTiles = new GameObject[6];
+    [SerializeField] protected GameObject[] prefabsYellow = new GameObject[5];
+    [SerializeField] protected GameObject[] prefabsBlue = new GameObject[5];
+    [SerializeField] protected GameObject[] prefabsGreen = new GameObject[5];
+    [SerializeField] protected GameObject[] prefabsRed = new GameObject[5];
+    [SerializeField] protected GameObject tileMarkerYellow;
+    [SerializeField] protected GameObject tileMarkerBlue;
+    [SerializeField] protected GameObject tileMarkerGreen;
+    [SerializeField] protected GameObject tileMarkerRed;
+
+    [SerializeField] protected GameObject[] neighboredTiles = new GameObject[6];
    [SerializeField] protected float minDistance = 6;
    [SerializeField] protected Tile tile;
     [SerializeField] protected int[] costWhite = new int[5];
@@ -15,13 +23,14 @@ public class Building : MonoBehaviour
     [SerializeField] protected int level = 0;
    [SerializeField] protected int buildingIndex;
    [SerializeField] protected GameObject[] rangeGO;
+    protected Animator anim;
     protected TileGroups tg;
     protected BuildManager bm;
     public int maxLevel = 4;
+    [SerializeField] protected GameObject currentPrefab;
+    // No Start() in here or it overrides all Sub-Classes.
 
-                                                                                            // No Start() in here or it overrides all Sub-Classes.
- 
-  
+
     public Tile GetTile()
     { return tile;
     }
@@ -58,15 +67,64 @@ public class Building : MonoBehaviour
     public void IncreaseBuildingLevel()
     {
 
+        
         if (level < maxLevel)
         {
-            Debug.Log("Level Up!");
+         
             level++;
-            gameObject.GetComponent<MeshFilter>().mesh = buildingMeshes[level];
+            currentPrefab.SetActive(false);
+            if (tile.tag == "White")
+            {
+                currentPrefab = Instantiate(prefabsYellow[level], new Vector3(transform.position.x, transform.position.y + 3, transform.position.z), Quaternion.identity);
+
+            }
+            else if (tile.tag == "Blue")
+            {
+                currentPrefab = Instantiate(prefabsBlue[level], new Vector3(transform.position.x, transform.position.y + 3, transform.position.z), Quaternion.identity);
+            }
+            else if (tile.tag == "Green")
+            {
+                currentPrefab = Instantiate(prefabsGreen[level], new Vector3(transform.position.x, transform.position.y + 3, transform.position.z), Quaternion.identity);
+            }
+            else if (tile.tag == "Red")
+            {
+                currentPrefab = Instantiate(prefabsRed[level], new Vector3(transform.position.x, transform.position.y + 3, transform.position.z), Quaternion.identity);
+            }
+            anim = currentPrefab.GetComponent<Animator>();
+
+
 
         }
         else Debug.Log("Has Max Level");
         
+    }
+
+    public void BuildFirstLevel()
+    {
+       
+        if (tile.tag == "White")
+        {
+            Instantiate(tileMarkerYellow, new Vector3(transform.position.x, transform.position.y -1, transform.position.z), Quaternion.identity);
+            currentPrefab = Instantiate(prefabsYellow[level], new Vector3(transform.position.x,transform.position.y+3,transform.position.z), Quaternion.identity);
+        }
+        else if (tile.tag == "Blue")
+        {
+            Instantiate(tileMarkerBlue, new Vector3(transform.position.x, transform.position.y -1, transform.position.z), Quaternion.identity);
+            currentPrefab = Instantiate(prefabsBlue[level], new Vector3(transform.position.x, transform.position.y + 3, transform.position.z), Quaternion.identity);
+        }
+        else if (tile.tag == "Green")
+        {
+            Instantiate(tileMarkerGreen, new Vector3(transform.position.x, transform.position.y -1, transform.position.z), Quaternion.identity);
+            currentPrefab = Instantiate(prefabsGreen[level], new Vector3(transform.position.x, transform.position.y + 3, transform.position.z), Quaternion.identity);
+        }
+        else if (tile.tag == "Red")
+        {
+            Instantiate(tileMarkerRed, new Vector3(transform.position.x, transform.position.y -1, transform.position.z), Quaternion.identity);
+            currentPrefab = Instantiate(prefabsRed[level], new Vector3(transform.position.x, transform.position.y + 3, transform.position.z), Quaternion.identity);
+        }
+      
+        anim = currentPrefab.GetComponent<Animator>();
+
     }
 
     public GameObject[] GetRangeGO()

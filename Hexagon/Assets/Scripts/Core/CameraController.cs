@@ -6,14 +6,26 @@ public class CameraController : MonoBehaviour
 {
     [SerializeField] Camera mainCamera;
     [SerializeField] bool cameraIsDefault = true;
+    [SerializeField] float currentDefaultSize;
+    [SerializeField] GameObject lightGroup;
+    [SerializeField] Light[] light;
+    [SerializeField] int[] lightDistance;
+    [SerializeField] float[] lightIntensity;
+    [SerializeField] int[] lightRange;
+    [SerializeField] int[] lightSpotAngle;
+    [SerializeField] GameObject zeroTile;
+    int boardSize;
     TileGroups tg;
+    Vector3 startPosition;
+    float lastCameraSize;
    
     Transform tileToCenter;
 
     void Start()
-    { 
-        
+    {
+        startPosition = mainCamera.transform.position;  
         tg = FindObjectOfType<TileGroups>();
+
     }
 
     void Update()
@@ -23,12 +35,11 @@ public class CameraController : MonoBehaviour
 
             if (cameraIsDefault)
             {
-               
+                lastCameraSize = mainCamera.orthographicSize;
                 RaycastHit hit;
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out hit, Mathf.Infinity))
                 {
-                    cameraIsDefault = false;
                     tileToCenter = hit.transform;
                     if (tileToCenter.GetComponent<Tile>())
                     { ZoomIn(tileToCenter); }
@@ -36,20 +47,16 @@ public class CameraController : MonoBehaviour
 
                 }
             }
-            else if (!cameraIsDefault)
-            { cameraIsDefault = true; }
+            else if (!cameraIsDefault && tileToCenter.GetComponent<Tile>())
+            { 
+                cameraIsDefault = true;
+                mainCamera.gameObject.transform.position = new Vector3(0, 102, -100);
+                mainCamera.orthographicSize = lastCameraSize;
+            }
            
         }
     }
 
-    void LateUpdate()
-    {
-        if (cameraIsDefault)
-        {
-            mainCamera.orthographicSize = 10 + tg.GetCurrentBoardSize() * 5;
-        }
-       // mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, 15+tg.GetCurrentBoardSize()*8, mainCamera.transform.position.z);
-    }
 
     public void SetCameraDefault()
     {
@@ -57,7 +64,36 @@ public class CameraController : MonoBehaviour
     }
     void ZoomIn(Transform transform)
     {
+
+        mainCamera.gameObject.transform.position -= zeroTile.transform.position - transform.position;
         mainCamera.orthographicSize = 10;
-        mainCamera.transform.position = new Vector3(transform.position.x, mainCamera.transform.position.y, transform.position.z);
+        cameraIsDefault = false;
+       
     }
+
+    public void SetDefaultSize(int currentBoardSize)
+    {
+        boardSize = currentBoardSize;
+        currentDefaultSize = 8 + (currentBoardSize-1) * 5;
+        StartCoroutine("MoveCameraOut");
+         
+    }
+
+    IEnumerator MoveCameraOut()
+    {
+        lightGroup.transform.position = new Vector3(0, lightDistance[boardSize], 0);
+        for (int i = 0; i < light.Length; i++)
+        {
+            light[i].range = lightRange[boardSize];
+            light[i].intensity = lightIntensity[boardSize];
+            light[i].spotAngle = lightSpotAngle[boardSize];
+                }
+        while (mainCamera.orthographicSize < currentDefaultSize)
+        {
+            mainCamera.orthographicSize += .05f;
+            yield return new WaitForSeconds(.01f);
+        }
+    }
+
+    
 }

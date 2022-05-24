@@ -94,8 +94,8 @@ public class HarvestMovement : MonoBehaviour
                     rssManager.UpdateRss(1, "Blue"); 
                 }
                 else if (colourToHarvest == "White")
-                { 
-                    
+                {
+                    harvesterBuilding.GetComponent<Harvester>().SetTriggerColour(colourToHarvest);
                     rssManager.UpdateRss(1, "White"); }
                 else if (colourToHarvest == "Green")
                 {
