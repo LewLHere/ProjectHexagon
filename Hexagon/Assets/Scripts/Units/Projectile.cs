@@ -9,7 +9,28 @@ public class Projectile : MonoBehaviour
     [SerializeField] float speed = 5;
     [SerializeField] int baseDamage = 5;
     [SerializeField] int damageRange = 3;
+    [SerializeField] GameObject[] sparksPrefabs;
     public string projectileType;
+
+    private void Start()
+    {
+        if(projectileType == "Red")
+        {
+            sparksPrefabs[3].SetActive(true);
+        }
+        if (projectileType == "Blue")
+        {
+            sparksPrefabs[2].SetActive(true);
+        }
+        if (projectileType == "Green")
+        {
+            sparksPrefabs[1].SetActive(true);
+        }
+        if (projectileType == "White")
+        {
+            sparksPrefabs[0].SetActive(true);
+        }
+    }
     private void LateUpdate()
     {
         Move();

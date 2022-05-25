@@ -66,27 +66,9 @@ public class Tile : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        Debug.Log("Mouse on here");
-        if (bm.GetButtonSelected() == 0)
-        {
-            hoverInstance = Instantiate(hoveringEmpty, new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Quaternion.identity);
-        }
-        else if (bm.GetButtonSelected() == 1)
-        {
-            hoverInstance = Instantiate(hoveringHarvester, new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Quaternion.identity);
-        }
-        else if (bm.GetButtonSelected() == 2)
-        {
-            hoverInstance = Instantiate(hoveringTower, new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Quaternion.identity);
-        }
-        else if (bm.GetButtonSelected() == 3)
-        {
-            hoverInstance = Instantiate(hoveringForceField, new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Quaternion.identity);
-        }
-        else if (bm.GetButtonSelected() == 4)
-        {
-            hoverInstance = Instantiate(hoveringPulse, new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Quaternion.identity);
-        }
+            
+            hoverInstance = Instantiate(hoveringEmpty, new Vector3(transform.position.x, 2.2f, transform.position.z), Quaternion.identity);
+            
 
 
         if (building != null)
@@ -226,7 +208,7 @@ public class Tile : MonoBehaviour
 
     public void OccupiedByHarvester()
     { 
-        GameObject instancedObject = Instantiate(harvestedOnPrefab, new Vector3(transform.position.x, 2f, transform.position.z),Quaternion.identity);
+        GameObject instancedObject = Instantiate(harvestedOnPrefab, new Vector3(transform.position.x, 1.85f, transform.position.z),Quaternion.identity);
         instancedObject.transform.parent = gameObject.transform;
     }
 }

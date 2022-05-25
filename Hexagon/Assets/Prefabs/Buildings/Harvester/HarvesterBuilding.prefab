@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4195135767401182413}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.25, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
@@ -87,6 +87,7 @@ MonoBehaviour:
   level: 0
   buildingIndex: 0
   rangeGO: []
+  yComponent: 6
   maxLevel: 4
   currentPrefab: {fileID: 0}
   harvesterPrefab: {fileID: 7006035345659460091, guid: fd469135933bccd46aba2b54fc3eeb83, type: 3}

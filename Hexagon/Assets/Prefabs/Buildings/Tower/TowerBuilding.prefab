@@ -711,7 +711,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7581715426128351679}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8486390375639650975}
@@ -1075,6 +1075,7 @@ MonoBehaviour:
   - {fileID: 7566373491926483914}
   - {fileID: 2038255114792966744}
   - {fileID: 30479334630890987}
+  yComponent: 6
   maxLevel: 4
   currentPrefab: {fileID: 0}
   fireRate: 3

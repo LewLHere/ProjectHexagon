@@ -1,30 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class CameraController : MonoBehaviour
 {
     [SerializeField] Camera mainCamera;
     [SerializeField] bool cameraIsDefault = true;
     [SerializeField] float currentDefaultSize;
-    [SerializeField] GameObject lightGroup;
-    [SerializeField] Light[] light;
-    [SerializeField] int[] lightDistance;
+    [SerializeField] Light lightGO;
+    [SerializeField] int[] lightTransformY;
     [SerializeField] float[] lightIntensity;
     [SerializeField] int[] lightRange;
-    [SerializeField] int[] lightSpotAngle;
     [SerializeField] GameObject zeroTile;
-    int boardSize;
+    [SerializeField] Button pauseButton;
+    [SerializeField] TextMeshProUGUI pauseButtonText;
+    int boardSize = 0;
     TileGroups tg;
     Vector3 startPosition;
     float lastCameraSize;
-   
+    bool isPaused = false;
     Transform tileToCenter;
-
+    int lightChangeCounter = 0;
     void Start()
     {
         startPosition = mainCamera.transform.position;  
         tg = FindObjectOfType<TileGroups>();
+        lightGO.transform.position = new Vector3(0, lightTransformY[boardSize], 0);
+        lightGO.range = lightRange[boardSize];
+        lightGO.intensity = lightIntensity[boardSize];
 
     }
 
@@ -57,7 +62,24 @@ public class CameraController : MonoBehaviour
         }
     }
 
-
+    public void PauseGame()
+    {
+      
+        if (!isPaused)
+        {
+            pauseButtonText.text = "Unpause";
+            pauseButton.image.color = new Color(1, 0, 0);
+            Time.timeScale = 0;
+            isPaused = true;
+        }
+        else if (isPaused)
+        {
+            pauseButtonText.text = "Pause";
+            pauseButton.image.color = new Color(1, 1, 1);
+            Time.timeScale = 1;
+            isPaused = false;
+        }
+    }
     public void SetCameraDefault()
     {
         cameraIsDefault = true;
@@ -81,19 +103,15 @@ public class CameraController : MonoBehaviour
 
     IEnumerator MoveCameraOut()
     {
-        lightGroup.transform.position = new Vector3(0, lightDistance[boardSize], 0);
-        for (int i = 0; i < light.Length; i++)
-        {
-            light[i].range = lightRange[boardSize];
-            light[i].intensity = lightIntensity[boardSize];
-            light[i].spotAngle = lightSpotAngle[boardSize];
-                }
-        while (mainCamera.orthographicSize < currentDefaultSize)
-        {
-            mainCamera.orthographicSize += .05f;
-            yield return new WaitForSeconds(.01f);
+
+        lightGO.transform.position = new Vector3(0, lightTransformY[boardSize], 0);
+        lightGO.range = lightRange[boardSize];
+        lightGO.intensity = lightIntensity[boardSize];
+            while (mainCamera.orthographicSize < currentDefaultSize)
+            {
+                mainCamera.orthographicSize += .05f;
+                yield return new WaitForSeconds(.01f);
+            }
         }
     }
 
-    
-}

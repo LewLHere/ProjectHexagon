@@ -105,6 +105,7 @@ public class MobMover : MonoBehaviour
     }
     private void MoveToTarget()
     {
+       
         transform.position = Vector3.MoveTowards(transform.position, new Vector3(currentTarget.transform.position.x, spawnEnemies.tileHeight, currentTarget.transform.position.z), Time.deltaTime * speed);
     }
 
@@ -143,7 +144,9 @@ public class MobMover : MonoBehaviour
             System.Random rnd = new System.Random();
             currentTarget = closestTiles[rnd.Next(2)];
         }
-      
+
+        transform.LookAt(new Vector3(currentTarget.transform.position.x, this.transform.position.y, currentTarget.transform.position.z));
+        mh.SetCanvasToCamera();
       
     }
 

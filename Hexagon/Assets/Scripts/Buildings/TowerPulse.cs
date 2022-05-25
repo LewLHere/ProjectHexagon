@@ -33,16 +33,17 @@ public class TowerPulse : Building
     {
         MobHealth[] mobsOnTile;
         readyToPulse = false;
-        mobsOnTile = tile.GetMobsOnTile();                              // For this tile
-        for (int i = 0; i < mobsOnTile.Length; i++)
-        {
-            if (mobsOnTile[i] != null)
-            {
-                mobsOnTile[i].TakeDamage(damage[level]);
-                mobsOnTile[i].GetComponent<ParticleSystem>().Play();
-            }
-        }
-
+        pulsePrefab.SetActive(true);
+        /*   mobsOnTile = tile.GetMobsOnTile();                              // For this tile
+           for (int i = 0; i < mobsOnTile.Length; i++)
+           {
+               if (mobsOnTile[i] != null)
+               {
+                   mobsOnTile[i].TakeDamage(damage[level]);
+                   mobsOnTile[i].GetComponent<ParticleSystem>().Play();
+               }
+           }
+        */
 
         for (int j = 0; j < neighboredTiles.Length; j++)                                 // For all surrounding tiles
            {
@@ -52,7 +53,8 @@ public class TowerPulse : Building
             for (int i = 0; i < mobsOnTile.Length; i++)
             {
                 if (mobsOnTile[i] != null)
-                { 
+                {
+             
                 mobsOnTile[i].TakeDamage(damage[level]);
                 mobsOnTile[i].GetComponent<ParticleSystem>().Play();
                 }
@@ -61,7 +63,7 @@ public class TowerPulse : Building
         
        
         yield return new WaitForSeconds(fireRate[level]);
-
+        pulsePrefab.SetActive(false);
         readyToPulse = true;
     }
 

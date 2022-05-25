@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class MobHealth : MonoBehaviour
 {
@@ -14,17 +15,22 @@ public class MobHealth : MonoBehaviour
     bool readyToBePulsed = true;
     int level;
     Animator anim;
-    
+    SpawnEnemies spawnEnemies;
     MobMover mob;
     int indexOnTile;
     void Start()
     {
+        spawnEnemies = FindObjectOfType<SpawnEnemies>();
         anim = GetComponent<Animator>();
         currentHealth = startHealth;
         hpText.text = "" + currentHealth;
         enemyDisplay.transform.rotation = FindObjectOfType<Camera>().transform.rotation;
         mob = GetComponent<MobMover>();
-        
+
+        spawnEnemies.ShowHP += ActivateHP;
+        spawnEnemies.HideHP += DeactivateHP;
+        if (spawnEnemies.hpAreOn == true)
+        { hpText.gameObject.SetActive(true); }
     }
   
       public void TakeDamage(int damage)
@@ -44,11 +50,34 @@ public class MobHealth : MonoBehaviour
         hpText.text = ""+currentHealth;
 
         if (currentHealth <= 0)
-        { Destroy(gameObject); }
+        {
+            spawnEnemies.ShowHP -= ActivateHP;
+            spawnEnemies.HideHP -= DeactivateHP;
+            
+            Destroy(gameObject);
+            Destroy(this);
+        }
     }
 
+
+    private void ActivateHP(object sender, EventArgs e)
+    {
+        if (hpText.gameObject != null)
+        {
+            hpText.gameObject.SetActive(true);
+        }
+    }
+
+    private void DeactivateHP(object sender, EventArgs e)
+    {
+        if (hpText.gameObject != null)
+        {
+            hpText.gameObject.SetActive(false);
+        }
+    }
     public void SetIndexOnTile(int i)
     { indexOnTile = i; }
+
     public int GetIndexOnTile()
     { return indexOnTile; }
 
@@ -61,6 +90,11 @@ public class MobHealth : MonoBehaviour
     {
         return
               startHealth;
+    }
+
+    public void SetCanvasToCamera()
+    {
+        enemyDisplay.transform.rotation = FindObjectOfType<Camera>().transform.rotation;
     }
 
   
