@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TowerForceField : Building
 {
-    [SerializeField] float fireRate = .5f;
+    [SerializeField] float fireRate = .7f;
     [SerializeField] GameObject forceFieldPrefab = null;
     [SerializeField] int[] damage;
     bool isReadyForForceField = true;
@@ -33,16 +33,14 @@ public class TowerForceField : Building
 
     IEnumerator ForceFieldOn()
     {
-
+        forceFieldPrefab.SetActive(true);
         isReadyForForceField = false;
 
         for (int i = 0; i < tile.GetMobsOnTile().Length; i++)
         {
             if (tile.GetMobsOnTile()[i] != null)
             {
-                forceFieldPrefab.SetActive(true);
-
-                tile.GetMobsOnTile()[i].TakeDamage(damage[level]);
+              tile.GetMobsOnTile()[i].TakeDamage(damage[level]);
             }
         }
         yield return new WaitForSeconds(fireRate/2);

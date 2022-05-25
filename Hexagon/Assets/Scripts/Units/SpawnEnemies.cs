@@ -34,7 +34,10 @@ public class SpawnEnemies : MonoBehaviour
     System.Random rnd;
     CameraController mainCamera;
     ManageScene manageScene;
+    public bool hpAreOn = false;
 
+    public event EventHandler ShowHP;
+    public event EventHandler HideHP;
     private void Awake()
     {
        
@@ -62,15 +65,21 @@ public class SpawnEnemies : MonoBehaviour
             StartCoroutine("StartWave", waveNumber);
         }
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.LeftAlt) || Input.GetKeyDown(KeyCode.RightAlt))
         {
-            SpawnEnemy(waveNumber, 0);
+            if (!hpAreOn)
+            {
+                ShowHP?.Invoke(this, EventArgs.Empty);
+                hpAreOn = true;
+            }
+            else if (hpAreOn)
+            {
+               
+                HideHP?.Invoke(this, EventArgs.Empty);
+                hpAreOn = false;
+            }
         }
     }
-
-  
-
-
      IEnumerator StartWave(int wave)
     {
         currentWave.text = "Current wave: " + wave;

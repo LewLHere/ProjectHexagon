@@ -23,6 +23,7 @@ public class Building : MonoBehaviour
     [SerializeField] protected int level = 0;
    [SerializeField] protected int buildingIndex;
    [SerializeField] protected GameObject[] rangeGO;
+    [SerializeField] float yComponent;
     protected Animator anim;
     protected TileGroups tg;
     protected BuildManager bm;
@@ -31,6 +32,8 @@ public class Building : MonoBehaviour
     // No Start() in here or it overrides all Sub-Classes.
 
 
+    public float GetyComponent()
+    { return yComponent; }
     public Tile GetTile()
     { return tile;
     }
@@ -75,20 +78,20 @@ public class Building : MonoBehaviour
             currentPrefab.SetActive(false);
             if (tile.tag == "White")
             {
-                currentPrefab = Instantiate(prefabsYellow[level], new Vector3(transform.position.x, transform.position.y + 3, transform.position.z), Quaternion.identity);
+                currentPrefab = Instantiate(prefabsYellow[level], new Vector3(transform.position.x, yComponent, transform.position.z), gameObject.transform.rotation);
 
             }
             else if (tile.tag == "Blue")
             {
-                currentPrefab = Instantiate(prefabsBlue[level], new Vector3(transform.position.x, transform.position.y + 3, transform.position.z), Quaternion.identity);
+                currentPrefab = Instantiate(prefabsBlue[level], new Vector3(transform.position.x,yComponent, transform.position.z), gameObject.transform.rotation);
             }
             else if (tile.tag == "Green")
             {
-                currentPrefab = Instantiate(prefabsGreen[level], new Vector3(transform.position.x, transform.position.y + 3, transform.position.z), Quaternion.identity);
+                currentPrefab = Instantiate(prefabsGreen[level], new Vector3(transform.position.x, yComponent, transform.position.z), gameObject.transform.rotation);
             }
             else if (tile.tag == "Red")
             {
-                currentPrefab = Instantiate(prefabsRed[level], new Vector3(transform.position.x, transform.position.y + 3, transform.position.z), Quaternion.identity);
+                currentPrefab = Instantiate(prefabsRed[level], new Vector3(transform.position.x, yComponent, transform.position.z), gameObject.transform.rotation);
             }
             anim = currentPrefab.GetComponent<Animator>();
 
@@ -104,23 +107,23 @@ public class Building : MonoBehaviour
        
         if (tile.tag == "White")
         {
-            Instantiate(tileMarkerYellow, new Vector3(transform.position.x, transform.position.y -1, transform.position.z), Quaternion.identity);
-            currentPrefab = Instantiate(prefabsYellow[level], new Vector3(transform.position.x,transform.position.y+3,transform.position.z), Quaternion.identity);
+           // Instantiate(tileMarkerYellow, new Vector3(transform.position.x, transform.position.y -2, transform.position.z), gameObject.transform.rotation);
+            currentPrefab = Instantiate(prefabsYellow[level], new Vector3(transform.position.x,yComponent,transform.position.z), gameObject.transform.rotation);
         }
         else if (tile.tag == "Blue")
         {
-            Instantiate(tileMarkerBlue, new Vector3(transform.position.x, transform.position.y -1, transform.position.z), Quaternion.identity);
-            currentPrefab = Instantiate(prefabsBlue[level], new Vector3(transform.position.x, transform.position.y + 3, transform.position.z), Quaternion.identity);
+            //Instantiate(tileMarkerBlue, new Vector3(transform.position.x, transform.position.y -2, transform.position.z), Quaternion.identity);
+            currentPrefab = Instantiate(prefabsBlue[level], new Vector3(transform.position.x, yComponent, transform.position.z), gameObject.transform.rotation);
         }
         else if (tile.tag == "Green")
         {
-            Instantiate(tileMarkerGreen, new Vector3(transform.position.x, transform.position.y -1, transform.position.z), Quaternion.identity);
-            currentPrefab = Instantiate(prefabsGreen[level], new Vector3(transform.position.x, transform.position.y + 3, transform.position.z), Quaternion.identity);
+            //Instantiate(tileMarkerGreen, new Vector3(transform.position.x, transform.position.y -2, transform.position.z), Quaternion.identity);
+            currentPrefab = Instantiate(prefabsGreen[level], new Vector3(transform.position.x, yComponent, transform.position.z), gameObject.transform.rotation);
         }
         else if (tile.tag == "Red")
         {
-            Instantiate(tileMarkerRed, new Vector3(transform.position.x, transform.position.y -1, transform.position.z), Quaternion.identity);
-            currentPrefab = Instantiate(prefabsRed[level], new Vector3(transform.position.x, transform.position.y + 3, transform.position.z), Quaternion.identity);
+           // Instantiate(tileMarkerRed, new Vector3(transform.position.x, transform.position.y -2, transform.position.z), Quaternion.identity);
+            currentPrefab = Instantiate(prefabsRed[level], new Vector3(transform.position.x, yComponent, transform.position.z), gameObject.transform.rotation);
         }
       
         anim = currentPrefab.GetComponent<Animator>();

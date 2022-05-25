@@ -13,7 +13,7 @@ public class BuildManager : MonoBehaviour
     [SerializeField] GameObject towerPrefab;
     [SerializeField] GameObject forceFieldPrefab;
     [SerializeField] GameObject pulsePrefab;
-    [SerializeField] float yCorrect = 3.5f;
+    [SerializeField] float yCorrect = 4.5f;
     [SerializeField] GameObject costTextGO;
     [SerializeField] TextMeshProUGUI textCost, textWhite, textBlue, textGreen, textRed;
 
@@ -129,7 +129,7 @@ public class BuildManager : MonoBehaviour
             rss.UpdateRss(-buildingToBuild.GetCostRed(0), "Red");
 
             tileToBuild.isOccupied = true;
-            GameObject buildingInstance = Instantiate(buildGO, new Vector3(toBuild.position.x, yCorrect, toBuild.position.z), Quaternion.identity);
+            GameObject buildingInstance = Instantiate(buildGO, new Vector3(toBuild.position.x, yCorrect, toBuild.position.z), Quaternion.identity); ;
             tileToBuild.SetBuilding(buildingInstance.GetComponent<Building>());
             buildingInstance.GetComponent<Building>().SetTile(tileToBuild);
             tileToBuild.GetBuilding().BuildFirstLevel();
@@ -159,16 +159,33 @@ public class BuildManager : MonoBehaviour
      
     }
 
-    public void GetBuildingCost(GameObject building, int currenBuildingLevel)
+    public void GetBuildingCost(GameObject building, int currentBuildingLevel)
     {
-        if (currenBuildingLevel <= building.GetComponent<Building>().maxLevel)
+        if (currentBuildingLevel <= building.GetComponent<Building>().maxLevel)
         {
-            costWhite = building.GetComponent<Building>().GetCostWhite(currenBuildingLevel);
-            costBlue = building.GetComponent<Building>().GetCostBlue(currenBuildingLevel);
-            costGreen = building.GetComponent<Building>().GetCostGreen(currenBuildingLevel);
-            costRed = building.GetComponent<Building>().GetCostRed(currenBuildingLevel);
+            costWhite = building.GetComponent<Building>().GetCostWhite(currentBuildingLevel);
+            costBlue = building.GetComponent<Building>().GetCostBlue(currentBuildingLevel);
+            costGreen = building.GetComponent<Building>().GetCostGreen(currentBuildingLevel);
+            costRed = building.GetComponent<Building>().GetCostRed(currentBuildingLevel);
 
-            textCost.text = building.GetComponent<Building>().name;
+            if(building.GetComponent<Harvester>() != null)
+            {
+                textCost.text = "Harvester Level " + (currentBuildingLevel + 1);
+            }
+            if (building.GetComponent<TowerPulse>() != null)
+            {
+                textCost.text = "Impulse Level " + (currentBuildingLevel+ 1);
+            }
+            if (building.GetComponent<Tower>() != null)
+            {
+                textCost.text = "Tower Level " + (currentBuildingLevel + 1);
+            }
+            if (building.GetComponent<TowerForceField>() != null)
+            {
+                textCost.text = "Forcefield Level " + (currentBuildingLevel + 1);
+            }
+            
+           
             textWhite.text = "" + costWhite;
             textBlue.text = "" + costBlue;
             textGreen.text = "" + costGreen;
@@ -176,11 +193,26 @@ public class BuildManager : MonoBehaviour
         }
         else
         {
-            textCost.text = building.GetComponent<Building>().name;
-            textWhite.text = "MAX";
-            textBlue.text = "MAX";
-            textGreen.text = "MAX";
-            textRed.text = "MAX";
+            if (building.GetComponent<Harvester>() != null)
+            {
+                textCost.text = "Harvester Max";
+            }
+            if (building.GetComponent<TowerPulse>() != null)
+            {
+                textCost.text = "Impulse Max";
+            }
+            if (building.GetComponent<Tower>() != null)
+            {
+                textCost.text = "Tower Max";
+            }
+            if (building.GetComponent<TowerForceField>() != null)
+            {
+                textCost.text = "Forcefield Max";
+            }
+            textWhite.text = "/";
+            textBlue.text = "/";
+            textGreen.text = "/";
+            textRed.text = "/";
         }
 
     }

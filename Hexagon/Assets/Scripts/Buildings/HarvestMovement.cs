@@ -10,7 +10,7 @@ public class HarvestMovement : MonoBehaviour
     [SerializeField] GameObject harvesterBuilding;
     [SerializeField] int indexToHarvest = 0;
     [SerializeField] float waitTime;
-    [SerializeField] GameObject rssPrefab;
+    [SerializeField] GameObject[] sparks;
     Transform targetTransform;
     bool nextUpHarvest = true;
     bool readyToMove = true;
@@ -57,6 +57,7 @@ public class HarvestMovement : MonoBehaviour
             else if (nextUpHarvest == false)
             {
                 targetTransform = harvesterBuilding.gameObject.transform;
+
             }
 
 
@@ -71,23 +72,30 @@ public class HarvestMovement : MonoBehaviour
             {
                
                 nextUpHarvest = false;
-
-                rssPrefab.SetActive(true);
+                sparks[0].SetActive(false);
+              
                 if (colourToHarvest == "White")
-
-                { rssPrefab.GetComponent<MeshRenderer>().material.color = new Color(1, 1, 1); }
+                { sparks[1].SetActive(true); }
+                
                 else if (colourToHarvest == "Blue")
+                { sparks[2].SetActive(true); }
 
-                { rssPrefab.GetComponent<MeshRenderer>().material.color = new Color(0, 0, 1); }
                 else if (colourToHarvest == "Green")
+                { sparks[3].SetActive(true); }
 
-                { rssPrefab.GetComponent<MeshRenderer>().material.color = new Color(0,1,0); }
                 else if (colourToHarvest == "Red")
-                { rssPrefab.GetComponent<MeshRenderer>().material.color = new Color(1, 0, 0); }
+                { sparks[4].SetActive(true); }
 
             }
             else if (nextUpHarvest == false)                                         // When Returning to base update RSSMgmt.
             {
+
+                sparks[0].SetActive(true);
+                sparks[1].SetActive(false);
+                sparks[2].SetActive(false);
+                sparks[3].SetActive(false);
+                sparks[4].SetActive(false);
+             
                 if (colourToHarvest == "Blue")                    
                 {
                     harvesterBuilding.GetComponent<Harvester>().SetTriggerColour(colourToHarvest);
@@ -106,7 +114,7 @@ public class HarvestMovement : MonoBehaviour
                     harvesterBuilding.GetComponent<Harvester>().SetTriggerColour(colourToHarvest);
                     rssManager.UpdateRss(1, "Red"); }
 
-                rssPrefab.SetActive(false);
+           
                 indexToHarvest++;
             if (indexToHarvest >= 6)
                 { indexToHarvest = 0; }
