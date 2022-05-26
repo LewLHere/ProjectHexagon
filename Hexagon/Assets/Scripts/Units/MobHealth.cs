@@ -53,13 +53,15 @@ public class MobHealth : MonoBehaviour
         {
             spawnEnemies.ShowHP -= ActivateHP;
             spawnEnemies.HideHP -= DeactivateHP;
-            
-            Destroy(gameObject);
-            Destroy(this);
+            hpText.gameObject.SetActive(false);
+            mob.TriggerDie();
+           
+          
         }
     }
 
-
+    public void UpdateHpTextRotation()
+    { enemyDisplay.transform.rotation = FindObjectOfType<Camera>().transform.rotation; }
     private void ActivateHP(object sender, EventArgs e)
     {
         if (hpText.gameObject != null)

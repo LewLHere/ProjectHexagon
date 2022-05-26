@@ -12,12 +12,20 @@ public class MobMover : MonoBehaviour
     [SerializeField] float distanceOfTwoTiles = 6f;
     [SerializeField] float speed;
     [SerializeField] float startSpeed = 5f;
+    
     [SerializeField] float redMultiplier;
+    [SerializeField] float rotationSpeed;
     [SerializeField] GameObject shieldGO;
     [SerializeField] int tier;
+    [SerializeField] float birthTime;
+    [SerializeField] float dieTime;
+    [SerializeField] Animator anim;
+    [SerializeField] GameObject mobGO;
     SpawnEnemies spawnEnemies;
     ManageScene manageScene;
+    bool nowMove = false;
 
+    float startRotationSpeed = 100;
     public string colour;
     MobHealth mh;
     GameObject[] all;
@@ -27,7 +35,7 @@ public class MobMover : MonoBehaviour
 
     private void Awake()
     {
-      
+        mobGO.SetActive(false);
         mh = GetComponent<MobHealth>();
         spawnEnemies = FindObjectOfType<SpawnEnemies>();
         tg = FindObjectOfType<TileGroups>();
@@ -35,18 +43,27 @@ public class MobMover : MonoBehaviour
     }
     private void Start()
     {
-
-
         manageScene = FindObjectOfType<ManageScene>();
-      
         all = tg.GetAll().ToArray();
         GetNextTile();
+        StartCoroutine("WaitForBirth");
+      
+      
+      
+        
 
     }
 
     private void Update()
     {
-
+        Vector3 dir = currentTarget.transform.position - transform.position;
+        dir.y = 0;
+        Quaternion rot = Quaternion.LookRotation(dir);
+        if(!mobGO.activeSelf)
+        { mobGO.SetActive(true); }
+        mh.UpdateHpTextRotation();
+        transform.rotation = Quaternion.Slerp(transform.rotation, rot, startRotationSpeed * Time.deltaTime);
+        if (!nowMove) return;
         distanceToNextTarget = Vector3.Distance(new Vector3(transform.position.x, spawnEnemies.tileHeight, transform.position.z), new Vector3(currentTarget.transform.position.x, spawnEnemies.tileHeight, currentTarget.transform.position.z));
         if (distanceToNextTarget > distanceOfTwoTiles / 30)
         {
@@ -56,6 +73,8 @@ public class MobMover : MonoBehaviour
         {
             GetNextTile();
         }
+
+       
 
     }
 
@@ -144,28 +163,57 @@ public class MobMover : MonoBehaviour
             System.Random rnd = new System.Random();
             currentTarget = closestTiles[rnd.Next(2)];
         }
-
-        transform.LookAt(new Vector3(currentTarget.transform.position.x, this.transform.position.y, currentTarget.transform.position.z));
+       
+        // transform.LookAt(new Vector3(currentTarget.transform.position.x, this.transform.position.y, currentTarget.transform.position.z));
         mh.SetCanvasToCamera();
       
     }
 
+   
+    IEnumerator WaitForBirth()
+    {
+        yield return new WaitForSeconds(birthTime);
+        startRotationSpeed = rotationSpeed;
+        nowMove = true;
+    }
     IEnumerator WaitForHeal()
     {
         yield return new WaitForSeconds(.01f);
         mh.TakeDamage((mh.GetStartHP()/-10));
     }
+
+    IEnumerator WaitForDie(bool wentThrough)
+    {
+        anim.SetTrigger("Die");
+
+        yield return new WaitForSeconds(dieTime);
+
+        if(wentThrough)
+        { 
+            spawnEnemies.SpawnEnemy(spawnEnemies.GetWave(), 1); 
+        }
+
+        Destroy(gameObject);
+    }
+
+    public void TriggerDie()
+    { StartCoroutine("WaitForDie",false); }
+
     void MobWentThrough()
     {
         if (tier == 0)
         {
-            spawnEnemies.SpawnEnemy(spawnEnemies.GetWave(), 1);
+            StartCoroutine("WaitForDie", true);
+          
+            
         }
         if (tier == 1)
         {
+            StartCoroutine("WaitForDie", false);
             manageScene.GameOver();
         }
-        Destroy(gameObject);
+      
+       
     }
 
     public GameObject GetShield()

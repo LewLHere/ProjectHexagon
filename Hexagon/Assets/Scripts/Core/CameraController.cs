@@ -62,20 +62,20 @@ public class CameraController : MonoBehaviour
         }
     }
 
+
+  
     public void PauseGame()
     {
       
         if (!isPaused)
         {
-            pauseButtonText.text = "Unpause";
-            pauseButton.image.color = new Color(1, 0, 0);
+         
             Time.timeScale = 0;
             isPaused = true;
         }
         else if (isPaused)
         {
-            pauseButtonText.text = "Pause";
-            pauseButton.image.color = new Color(1, 1, 1);
+          
             Time.timeScale = 1;
             isPaused = false;
         }
