@@ -53,6 +53,7 @@ public class BuildManager : MonoBehaviour
         if (buttonNumber == 1)
         { selectedButton = 1;
             costTextGO.SetActive(true);
+
             GetBuildingCost(harvesterPrefab, 0);
 
         }
@@ -159,6 +160,7 @@ public class BuildManager : MonoBehaviour
      
     }
 
+  
     public void GetBuildingCost(GameObject building, int currentBuildingLevel)
     {
         if (currentBuildingLevel <= building.GetComponent<Building>().maxLevel)

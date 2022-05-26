@@ -9,11 +9,9 @@ using UnityEngine.UI;
 public class ManageScene : MonoBehaviour
 {
     int diffituly;
-    [SerializeField] GameObject boardCanvas;
-    [SerializeField] GameObject difficultyCanvas;
-    [SerializeField] GameObject musicText;
-    [SerializeField] GameObject soundText;
-    bool soundEnabled = true;
+    
+   
+   
         bool musicEnabled = true;
     [SerializeField] AudioSource musicSource;
    
@@ -26,10 +24,7 @@ public class ManageScene : MonoBehaviour
 
     private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
-      if(soundEnabled == false)
-        {
-
-        }
+     
         if (musicEnabled == false)
         {
             GameObject.Find("BackgroundMusic").GetComponent<AudioSource>().Stop();
@@ -51,42 +46,22 @@ public class ManageScene : MonoBehaviour
     public void SetDifficulty(int difficultyNumber)
     {
              diffituly = difficultyNumber;
-            difficultyCanvas.SetActive(false);
-            boardCanvas.SetActive(true);
+       
     }
 
-    public bool GetSoundEnabled()
-    { return soundEnabled; }
-    public void EnableSound()
+        public void DisableMusic()
     {
-        if (soundEnabled)
-        {
-            soundText.GetComponent<Text>().text = "Sound currently Disabled";
-            soundEnabled = false;
-            return;
-        }
-        if(!soundEnabled)
-        { soundEnabled = true;
-            soundText.GetComponent<Text>().text = "Sound currently Enabled";
-        }
+        musicEnabled = false;
+        musicSource.Stop();
     }
-
-    public void EnableMusic()
+        public void EnableMusic()
     {
-        if (musicEnabled)
-        {
-            musicText.GetComponent<Text>().text = "Music currently Disabled";
-            musicEnabled = false;
-            musicSource.Stop();
-            return;
-        }
-        if (!musicEnabled)
-        {
-            musicText.GetComponent<Text>().text = "Music currently Enabled";
-            musicEnabled = true;
-            musicSource.Play();
-        }
-    }
 
+        musicEnabled = true;
+        musicSource.Play();
+
+    }
+      
+  
 
 }
