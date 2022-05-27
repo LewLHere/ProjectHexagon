@@ -19,14 +19,21 @@ public class MobMover : MonoBehaviour
     [SerializeField] int tier;
     [SerializeField] float birthTime;
     [SerializeField] float dieTime;
+    [SerializeField] float dieTimeWhenThrough = 2f;
+
     [SerializeField] Animator anim;
     [SerializeField] GameObject mobGO;
+    [SerializeField] Material[] trailMats;
+    [SerializeField] AudioSource[] leakedAudios;
+    [SerializeField] AudioSource gameOverAudio;
+    [SerializeField] AudioSource[] dieSounds;
     SpawnEnemies spawnEnemies;
     ManageScene manageScene;
     bool nowMove = false;
-
+    bool isDieing = false;
     float startRotationSpeed = 100;
     public string colour;
+    TrailRenderer trail;
     MobHealth mh;
     GameObject[] all;
    
@@ -35,6 +42,7 @@ public class MobMover : MonoBehaviour
 
     private void Awake()
     {
+        trail = GetComponentInChildren<TrailRenderer>();
         mobGO.SetActive(false);
         mh = GetComponent<MobHealth>();
         spawnEnemies = FindObjectOfType<SpawnEnemies>();
@@ -45,7 +53,7 @@ public class MobMover : MonoBehaviour
     {
         manageScene = FindObjectOfType<ManageScene>();
         all = tg.GetAll().ToArray();
-        GetNextTile();
+      
         StartCoroutine("WaitForBirth");
       
       
@@ -67,7 +75,10 @@ public class MobMover : MonoBehaviour
         distanceToNextTarget = Vector3.Distance(new Vector3(transform.position.x, spawnEnemies.tileHeight, transform.position.z), new Vector3(currentTarget.transform.position.x, spawnEnemies.tileHeight, currentTarget.transform.position.z));
         if (distanceToNextTarget > distanceOfTwoTiles / 30)
         {
-            MoveToTarget();
+            if (isDieing) return;
+            
+                MoveToTarget();
+            
         }
         else
         {
@@ -91,19 +102,23 @@ public class MobMover : MonoBehaviour
 
             if (colour == "White")
             {
+                trail.material = trailMats[0];
                 speed = startSpeed;
             }
             else if (colour == "Blue")
             {
+                trail.material = trailMats[1];
                 shieldGO.SetActive(true);
             }
             else if (colour == "Green")
             {
+                trail.material = trailMats[2];
                 StartCoroutine("WaitForHeal");
               
             }
             else if (colour == "Red")
             {
+                trail.material = trailMats[3];
                 speed = redMultiplier * startSpeed;
             }
         }
@@ -117,9 +132,12 @@ public class MobMover : MonoBehaviour
             {
             other.gameObject.GetComponent<Tile>().RemoveMobFromTileList(GetComponent<MobHealth>().GetIndexOnTile());
             }
-        if (!closestTiles[0].activeSelf && !closestTiles[1].activeSelf)
+        if (closestTiles[0] != null && closestTiles[1] != null)
         {
-            MobWentThrough();
+            if (!closestTiles[0].activeSelf && !closestTiles[1].activeSelf)
+            {
+                MobWentThrough();
+            }
         }
     }
     private void MoveToTarget()
@@ -169,7 +187,8 @@ public class MobMover : MonoBehaviour
       
     }
 
-   
+   public void SetTarget(GameObject target)
+    { currentTarget = target; }
     IEnumerator WaitForBirth()
     {
         yield return new WaitForSeconds(birthTime);
@@ -184,15 +203,20 @@ public class MobMover : MonoBehaviour
 
     IEnumerator WaitForDie(bool wentThrough)
     {
+        isDieing = true;
         anim.SetTrigger("Die");
 
-        yield return new WaitForSeconds(dieTime);
-
-        if(wentThrough)
-        { 
-            spawnEnemies.SpawnEnemy(spawnEnemies.GetWave(), 1); 
+        if (wentThrough)
+        {
+                     spawnEnemies.SpawnEnemy(spawnEnemies.GetWave(), 1);
+            yield return new WaitForSeconds(dieTimeWhenThrough);
         }
-
+        else {
+            System.Random rnd = new System.Random();
+            int nextAudio = rnd.Next(0,5);
+            dieSounds[nextAudio].Play();
+            yield return new WaitForSeconds(dieTime); }
+       
         Destroy(gameObject);
     }
 
@@ -203,6 +227,10 @@ public class MobMover : MonoBehaviour
     {
         if (tier == 0)
         {
+            System.Random rnd = new System.Random();
+            int nextAudio = rnd.Next(3);
+            leakedAudios[nextAudio].Play();
+
             StartCoroutine("WaitForDie", true);
           
             
@@ -210,7 +238,9 @@ public class MobMover : MonoBehaviour
         if (tier == 1)
         {
             StartCoroutine("WaitForDie", false);
-            manageScene.GameOver();
+            CameraController cc = FindObjectOfType<CameraController>();
+            cc.GameOver();
+            gameOverAudio.Play();
         }
       
        

@@ -40,6 +40,7 @@ public class TowerForceField : Building
         {
             if (tile.GetMobsOnTile()[i] != null)
             {
+                Debug.Log(tile.GetMobsOnTile()[i]);
               tile.GetMobsOnTile()[i].TakeDamage(damage[level]);
             }
         }

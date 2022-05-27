@@ -18,13 +18,18 @@ public class SpawnEnemies : MonoBehaviour
     [SerializeField] int wavesPerBoard;
     [SerializeField] int wavesOnCurrentBoard;
     [SerializeField] GameObject randomSpawnTile;
-    
+    GameObject tileForNecroToMoveTo;
     [SerializeField] List<GameObject> spawnTileList;
     [SerializeField] List<GameObject> finishTileList;
     [SerializeField] GameObject[] mobPrefab = null;
     [SerializeField] int indexToSpawn;
     [SerializeField] TextMeshProUGUI countdownText;
     [SerializeField] TextMeshProUGUI currentWave;
+    [SerializeField] GameObject necromancer;
+    [SerializeField] float necroAnimLength;
+    [SerializeField] float necromancerRotationSpeed = 1f;
+
+    [SerializeField] AudioSource newWaveAudio;
     int difficulty;
     float countdown;
     public float tileHeight = 2.5f;
@@ -35,7 +40,10 @@ public class SpawnEnemies : MonoBehaviour
     CameraController mainCamera;
     ManageScene manageScene;
     public bool hpAreOn = false;
-
+    
+    bool necroReadyToSpawn = false;
+    bool necroAnimationDone = true;
+    Animator necroAnim;
     public event EventHandler ShowHP;
     public event EventHandler HideHP;
     private void Awake()
@@ -44,18 +52,35 @@ public class SpawnEnemies : MonoBehaviour
     }
     private void Start()
     {
+        necroAnim = necromancer.GetComponentInChildren<Animator>();
         manageScene = FindObjectOfType<ManageScene>();
         difficulty = manageScene.GetDifficulty();
         mainCamera = FindObjectOfType<CameraController>();
         tg = FindObjectOfType<TileGroups>();
 
         StartCoroutine("StartWave", 0);
-
+        CreateNextSpawnTile();
 
     }
 
     void Update()
     {
+        if (randomSpawnTile != null)
+        {
+            if (Vector3.Distance(new Vector3(necromancer.transform.position.x, 0, 0), new Vector3(randomSpawnTile.transform.position.x, 0, 0)) > .3f && necroAnimationDone)
+            {
+                necromancer.transform.position = Vector3.MoveTowards(necromancer.transform.position, new Vector3(randomSpawnTile.transform.position.x, necromancer.transform.position.y, randomSpawnTile.transform.position.z + 5), 5f * Time.deltaTime);
+                Vector3 dir = randomSpawnTile.transform.position - necromancer.transform.position;
+                dir.y = 0;
+                Quaternion rot = Quaternion.LookRotation(dir);
+                necromancer.transform.rotation = Quaternion.Slerp(transform.rotation, rot, necromancerRotationSpeed * Time.deltaTime);
+            }
+            else {
+                
+                necroReadyToSpawn = true; }
+           
+        }
+
         if (updateCountdownNow)
         {
             countdownText.text = ("Next wave in " + countdown);
@@ -88,11 +113,13 @@ public class SpawnEnemies : MonoBehaviour
         {
              yield return new WaitForSeconds(3); 
         }
+        newWaveAudio.Play();
        int mobsSpawnedThisWave = 0;
        wavesOnCurrentBoard++;
         while (mobsSpawnedThisWave < waveSize[wave])
         {
-            
+            necroAnim.SetTrigger("Summon");
+            yield return new WaitForSeconds(necroAnimLength);
             SpawnEnemy(waveNumber,0);
             mobsSpawnedThisWave++;
             countdownText.text = "Mobs remaining: " + (waveSize[wave] - mobsSpawnedThisWave);
@@ -101,7 +128,7 @@ public class SpawnEnemies : MonoBehaviour
                 StartCoroutine("StartCountdown");
 
             }
-            yield return new WaitForSeconds(timeBetweenMobs[wave]);
+            yield return new WaitForSeconds(timeBetweenMobs[wave]-necroAnimLength);
             
         }
         if (wavesOnCurrentBoard >= wavesPerBoard)
@@ -142,37 +169,52 @@ public class SpawnEnemies : MonoBehaviour
  
     public void SpawnEnemy(int waveNumber, int enemyTier)
     {
-
-        int y = 0;
-        spawnTileList = tg.GetEnemySpawnTiles();
-        finishTileList = tg.GetEnemyFinishTiles();
-        for (int i= 0; i < spawnTileList.Count; i++)
-        {
-            if(spawnTileList[i] == null)
-            { break; }
-            else
-            { y++;              // Count how many spawntiles exist
-              
-            }
-        }
-
        
-                rnd = new System.Random();
-                indexToSpawn = rnd.Next(y);                     // Pick Random SpawnTile
-                randomSpawnTile = spawnTileList[indexToSpawn];
+        
         if (randomSpawnTile != null)
         {
+
+
+
             GameObject mobInstance;
             mobInstance = Instantiate(mobPrefab[enemyTier], new Vector3(randomSpawnTile.transform.position.x, 2.5f, randomSpawnTile.transform.position.z+1.5f), Quaternion.identity); //gogo
             mobInstance.GetComponent<MobMover>().SetSpeed(speed[waveNumber]);
             mobInstance.GetComponent<MobHealth>().SetHP(hpMultiplier[difficulty]*hp[waveNumber] + hp[waveNumber] * 2 * enemyTier );
 
             mobInstance.GetComponent<MobMover>().SetLastSpottedOn(randomSpawnTile);
+            mobInstance.GetComponent<MobMover>().SetTarget(randomSpawnTile);
         }
-            }
+        CreateNextSpawnTile();
+    }
 
+   
+    void CreateNextSpawnTile()
+    {
+        int y = 0;
+        spawnTileList = tg.GetEnemySpawnTiles();
+        finishTileList = tg.GetEnemyFinishTiles();
+        for (int i = 0; i < spawnTileList.Count; i++)
+        {
+            if (spawnTileList[i] == null)
+            { break; }
+            else
+            {
+                y++;              // Count how many spawntiles exist
+
+            }
+        }
+
+
+        rnd = new System.Random();
+        indexToSpawn = rnd.Next(y);                     // Pick Random SpawnTile
+        randomSpawnTile = spawnTileList[indexToSpawn];
+    }
     public int GetWave()
     { return waveNumber; }
+
+   
+      
+   
   }
     
 

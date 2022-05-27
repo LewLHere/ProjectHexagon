@@ -16,8 +16,9 @@ public class BuildManager : MonoBehaviour
     [SerializeField] float yCorrect = 4.5f;
     [SerializeField] GameObject costTextGO;
     [SerializeField] TextMeshProUGUI textCost, textWhite, textBlue, textGreen, textRed;
-
+    [SerializeField] AudioSource levelUpAudio;
     [SerializeField] int selectedButton = 0;
+    [SerializeField] public TextMeshProUGUI[] upgradeCostText;
     Transform toBuild;
     int level = 0;
     int costWhite, costGreen, costBlue, costRed;
@@ -25,13 +26,14 @@ public class BuildManager : MonoBehaviour
     ResourceManager rss;
     Building buildingToBuild;
     Tile tileToBuild;
+    GameObject tileInstance;
 
     void Start()
     {
         rss = FindObjectOfType<ResourceManager>();
     }
 
-    private void Update()
+ /*   private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -47,114 +49,103 @@ public class BuildManager : MonoBehaviour
         }
     }
 
+    */
 
-    public void SelectBuildingButton(int buttonNumber)
+    public void SetUpdateCostText(string txt)
+    { textCost.text = txt; }
+    public void DeleteLastMarkedTile()
+    { Destroy(tileInstance); }
+
+    public void SaveHoverTile(GameObject hoverInstance)
+    { tileInstance = hoverInstance; }
+    public void SetTileToBuild(Tile tile)
+    { tileToBuild = tile;}
+    public void Buildlvl1(int buttonNumber)
     {
         if (buttonNumber == 1)
         { selectedButton = 1;
-            costTextGO.SetActive(true);
+         
+            BuildBuilding(harvesterPrefab);
 
-            GetBuildingCost(harvesterPrefab, 0);
 
         }
         if (buttonNumber == 2)
         { selectedButton = 2;
-            costTextGO.SetActive(true);
-            GetBuildingCost(towerPrefab, 0);
+
+            BuildBuilding(towerPrefab);
         }
         if (buttonNumber == 3)
         {
             selectedButton = 3;
-            costTextGO.SetActive(true);
-            GetBuildingCost(forceFieldPrefab, 0);
+
+            BuildBuilding(forceFieldPrefab);
         }
         if (buttonNumber == 4)
         {
             selectedButton = 4;
-            costTextGO.SetActive(true);
-            GetBuildingCost(pulsePrefab, 0);
-        }
-    }
 
-    private void TryBuildBuilding(int buildingNumber)
-    {   // if (tileToBuild.hasMobOnIt) return;
-        if (tileToBuild.isOccupied == true && tileToBuild.GetBuilding() == null) return;
-        if (toBuild.gameObject.GetComponent<Tile>() == null) { return; }
-
-       
-        if (selectedButton == 0)
-        { return; }
-        if (selectedButton == 1)
-        {
-            buildingIndex = 0;
-            buildingToBuild = harvesterPrefab.GetComponent<Building>();
-            BuildBuilding(harvesterPrefab);
-        }
-        if (selectedButton == 2)
-        {
-            buildingIndex = 1;
-            buildingToBuild = towerPrefab.GetComponent<Building>();
-            BuildBuilding(towerPrefab);
-        }
-
-        if (selectedButton == 3)
-        {
-            buildingIndex = 2;
-            buildingToBuild = forceFieldPrefab.GetComponent<Building>();
-            BuildBuilding(forceFieldPrefab);
-        }
-        if (selectedButton == 4)
-        {
-
-            buildingIndex = 3;
-            buildingToBuild = pulsePrefab.GetComponent<Building>();
             BuildBuilding(pulsePrefab);
-            Debug.Log(buildingIndex);
         }
     }
 
-    private void BuildBuilding(GameObject buildGO)
+    public void BuildBuilding(GameObject buildGO)
     {
+         if(tileToBuild != null)
        
-      
-        if (tileToBuild.GetBuilding() == null)
         {
-            if (rss.GetWhite() < buildingToBuild.GetCostWhite(0)) return;
-            if (rss.GetGreen() < buildingToBuild.GetCostGreen(0)) return;
-            if (rss.GetBlue() < buildingToBuild.GetCostBlue(0)) return;
-            if (rss.GetRed() < buildingToBuild.GetCostRed(0)) return;
-
-            rss.UpdateRss(-buildingToBuild.GetCostWhite(0), "White");
-            rss.UpdateRss(-buildingToBuild.GetCostGreen(0), "Green");
-            rss.UpdateRss(-buildingToBuild.GetCostBlue(0), "Blue");
-            rss.UpdateRss(-buildingToBuild.GetCostRed(0), "Red");
-
-            tileToBuild.isOccupied = true;
-            GameObject buildingInstance = Instantiate(buildGO, new Vector3(toBuild.position.x, yCorrect, toBuild.position.z), Quaternion.identity); ;
-            tileToBuild.SetBuilding(buildingInstance.GetComponent<Building>());
-            buildingInstance.GetComponent<Building>().SetTile(tileToBuild);
-            tileToBuild.GetBuilding().BuildFirstLevel();
-            
-        }
-     
-        else if (tileToBuild.GetBuilding().GetComponent<Building>().GetBuildingIndex() == buildingIndex)
-        {
-           
-            if (tileToBuild.GetBuilding().GetLevel() < tileToBuild.GetBuilding().maxLevel)
+          
+            if (tileToBuild.GetBuilding() == null && tileToBuild.isOccupied == false)
             {
-                if (rss.GetWhite() < buildingToBuild.GetCostWhite(tileToBuild.GetBuilding().GetLevel() + 1)) return;
-                if (rss.GetGreen() < buildingToBuild.GetCostGreen(tileToBuild.GetBuilding().GetLevel() + 1)) return;
-                if (rss.GetBlue() < buildingToBuild.GetCostBlue(tileToBuild.GetBuilding().GetLevel() + 1)) return;
-                if (rss.GetRed() < buildingToBuild.GetCostRed(tileToBuild.GetBuilding().GetLevel() + 1)) return;
+                if (rss.GetWhite() < buildGO.GetComponent<Building>().GetCostWhite(0)) return;
+                if (rss.GetGreen() < buildGO.GetComponent<Building>().GetCostGreen(0)) return;
+                if (rss.GetBlue() < buildGO.GetComponent<Building>().GetCostBlue(0)) return;
+                if (rss.GetRed() < buildGO.GetComponent<Building>().GetCostRed(0)) return;
 
-                rss.UpdateRss(-buildingToBuild.GetCostWhite(tileToBuild.GetBuilding().GetLevel() + 1), "White");
-                rss.UpdateRss(-buildingToBuild.GetCostGreen(tileToBuild.GetBuilding().GetLevel() + 1), "Green");
-                rss.UpdateRss(-buildingToBuild.GetCostBlue(tileToBuild.GetBuilding().GetLevel() + 1), "Blue");
-                rss.UpdateRss(-buildingToBuild.GetCostRed(tileToBuild.GetBuilding().GetLevel() + 1), "Red");
+                rss.UpdateRss(-buildGO.GetComponent<Building>().GetCostWhite(0), "White");
+                rss.UpdateRss(-buildGO.GetComponent<Building>().GetCostGreen(0), "Green");
+                rss.UpdateRss(-buildGO.GetComponent<Building>().GetCostBlue(0), "Blue");
+                rss.UpdateRss(-buildGO.GetComponent<Building>().GetCostRed(0), "Red");
 
-                tileToBuild.GetBuilding().IncreaseBuildingLevel();
+                tileToBuild.isOccupied = true;
+                GameObject buildingInstance = Instantiate(buildGO, new Vector3(tileToBuild.transform.position.x, yCorrect, tileToBuild.transform.position.z), Quaternion.identity); ;
+                tileToBuild.SetBuilding(buildingInstance.GetComponent<Building>());
+                buildingInstance.GetComponent<Building>().SetTile(tileToBuild);
+                tileToBuild.GetBuilding().BuildFirstLevel();
+                levelUpAudio.Play();
+
             }
+            else if (tileToBuild.GetBuilding() != null)
+            {
+
+                if (tileToBuild.GetBuilding().GetComponent<Building>() != null)
+                {
+
+
+                    if (tileToBuild.GetBuilding().GetLevel() < tileToBuild.GetBuilding().maxLevel)
+                    {
+                        Debug.Log(tileToBuild);
+                        Debug.Log(tileToBuild.GetBuilding().GetComponent<Building>());
+                        Debug.Log(tileToBuild.GetBuilding().GetLevel());
+                        Debug.Log(tileToBuild.GetBuilding().GetComponent<Building>().GetCostWhite(tileToBuild.GetBuilding().GetLevel()));
+
+                        if (rss.GetWhite() < tileToBuild.GetBuilding().GetComponent<Building>().GetCostWhite(tileToBuild.GetBuilding().GetLevel() + 1)) return;
+                        if (rss.GetGreen() < tileToBuild.GetBuilding().GetComponent<Building>().GetCostGreen(tileToBuild.GetBuilding().GetLevel() + 1)) return;
+                        if (rss.GetBlue() < tileToBuild.GetBuilding().GetComponent<Building>().GetCostBlue(tileToBuild.GetBuilding().GetLevel() + 1)) return;
+                        if (rss.GetRed() < tileToBuild.GetBuilding().GetComponent<Building>().GetCostRed(tileToBuild.GetBuilding().GetLevel() + 1)) return;
+
+                        rss.UpdateRss(-tileToBuild.GetBuilding().GetComponent<Building>().GetCostWhite(tileToBuild.GetBuilding().GetLevel() + 1), "White");
+                        rss.UpdateRss(-tileToBuild.GetBuilding().GetComponent<Building>().GetCostGreen(tileToBuild.GetBuilding().GetLevel() + 1), "Green");
+                        rss.UpdateRss(-tileToBuild.GetBuilding().GetComponent<Building>().GetCostBlue(tileToBuild.GetBuilding().GetLevel() + 1), "Blue");
+                        rss.UpdateRss(-tileToBuild.GetBuilding().GetComponent<Building>().GetCostRed(tileToBuild.GetBuilding().GetLevel() + 1), "Red");
+
+                        tileToBuild.GetBuilding().IncreaseBuildingLevel();
+                        levelUpAudio.Play();
+                    }
+                }
+            }
+
         }
+      
 
         
      

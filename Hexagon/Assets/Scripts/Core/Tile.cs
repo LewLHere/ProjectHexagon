@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class Tile : MonoBehaviour
 {
@@ -9,10 +12,10 @@ public class Tile : MonoBehaviour
     [SerializeField] float minDistance;
     [SerializeField] GameObject hoveringEmpty;
     [SerializeField] GameObject hoveringHarvester;
-    [SerializeField] GameObject hoveringTower;
-    [SerializeField] GameObject hoveringForceField;
-    [SerializeField] GameObject hoveringPulse;
+    [SerializeField] GameObject buildingButtons;
+    [SerializeField] GameObject upgradeButton;
     [SerializeField] GameObject harvestedOnPrefab;
+   
     Material startingMaterial;
     GameObject hoverInstance;
     int mobAmount;
@@ -21,12 +24,12 @@ public class Tile : MonoBehaviour
     [SerializeField] Building building;
     TileGroups tg;
     BuildManager bm;
-    
+    ResourceManager rm; 
    
    
     private void Awake()
     {
-       
+        rm = FindObjectOfType<ResourceManager>();
         minDistance = 6;
         tg = FindObjectOfType<TileGroups>();
         bm = FindObjectOfType<BuildManager>();
@@ -62,45 +65,90 @@ public class Tile : MonoBehaviour
     private void Start()
     {
         GetNeighboredTiles(gameObject);
+       
     }
 
-    private void OnMouseEnter()
-    {
-            
-            hoverInstance = Instantiate(hoveringEmpty, new Vector3(transform.position.x, 2.2f, transform.position.z), Quaternion.identity);
-            
+   
 
+    private void OnMouseDown()
+    {
+        bm.DeleteLastMarkedTile();
+        hoverInstance = Instantiate(hoveringEmpty, new Vector3(transform.position.x, 2.5f, transform.position.z), Quaternion.identity);
+        bm.SaveHoverTile(hoverInstance);
+        bm.SetTileToBuild(this);
+
+        if (building == null)
+        {
+            ActivateBuildingButtons();
+
+            
+            return;
+        }
+        if (building != null && building.GetLevel() < building.maxLevel)
+        {
+            
+            bm.upgradeCostText[0].text = "" + building.GetCostWhite(building.GetLevel()+1);
+            bm.upgradeCostText[1].text = "" + building.GetCostGreen(building.GetLevel()+1);
+            bm.upgradeCostText[2].text = "" + building.GetCostRed(building.GetLevel()+1);
+            bm.upgradeCostText[3].text = "" + building.GetCostBlue(building.GetLevel()+1);
+            bm.SetUpdateCostText("Upgrade to Lvl" + (building.GetLevel() + 2));
+
+            ActivateUpgradeButton();
+        }
+        if (building != null && building.GetLevel() >= building.maxLevel)
+        {
+           
+            bm.upgradeCostText[0].text = "/" + building.GetCostWhite(building.GetLevel() + 1);
+            bm.upgradeCostText[1].text = "/" + building.GetCostGreen(building.GetLevel() + 1);
+            bm.upgradeCostText[2].text = "/" + building.GetCostRed(building.GetLevel() + 1);
+            bm.upgradeCostText[3].text = "/" + building.GetCostBlue(building.GetLevel() + 1);
+            bm.SetUpdateCostText("Building Max Lvl");
+
+            ActivateUpgradeButton();
+        }
+
+    }
+
+    private void ActivateUpgradeButton()
+    {
+        if ((rm.GetBlue()) < building.costBlue[building.GetLevel()+1])
+        { bm.upgradeCostText[3].color = new Color(1, 0, 0); }
+        else bm.upgradeCostText[3].color = new Color(1, 1, 1);
+
+        if ((rm.GetWhite()) < building.costWhite[building.GetLevel() + 1])
+        { bm.upgradeCostText[0].color = new Color(1, 0, 0); }
+        else bm.upgradeCostText[0].color = new Color(1, 1, 1);
+
+        if ((rm.GetGreen()) < building.costGreen[building.GetLevel() + 1])
+        { bm.upgradeCostText[1].color = new Color(1, 0, 0); }
+        else bm.upgradeCostText[1].color = new Color(1, 1, 1);
+
+        if ((rm.GetRed()) < building.costRed[building.GetLevel() + 1])
+        { bm.upgradeCostText[2].color = new Color(1, 0, 0); }
+        else bm.upgradeCostText[2].color = new Color(1, 1, 1);
 
         if (building != null)
         {
-            if (building.GetRangeGO() != null)
-            {
-                for(int i = 0; i < building.GetRangeGO().Length; i++)
-                building.GetRangeGO()[i].GetComponent<MeshRenderer>().enabled = true;
-            }
-            bm.GetBuildingCost(building.gameObject, building.GetLevel() + 1);
-            return;
-        }
-      
           
-            if (bm.GetButtonSelected() == 1)
-            { bm.GetBuildingCost(bm.GetHarvester().gameObject, 0); }
+        }
 
-            if (bm.GetButtonSelected() == 2)
-            { bm.GetBuildingCost(bm.GetTower().gameObject, 0); }
 
-            if (bm.GetButtonSelected() == 3)                                                    // For more towers.
-            { bm.GetBuildingCost(bm.GetForceField().gameObject, 0); }
-        if (bm.GetButtonSelected() == 4)                                                    // For more towers.
-            { bm.GetBuildingCost(bm.GetPulse().gameObject, 0); }
-
+        upgradeButton.SetActive(true);
+        Button ub = upgradeButton.GetComponent<Button>();
+        buildingButtons.SetActive(false);
     }
+
+    private void ActivateBuildingButtons()
+    {
+        buildingButtons.SetActive(true);
+        upgradeButton.SetActive(false);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
        
         if (other.tag == "Mob")
         {
-            
             mobAmount++;
             hasMobOnIt = true;
             for (int i = 0; i < mobsOnThisTile.Length; i++)
@@ -112,14 +160,20 @@ public class Tile : MonoBehaviour
                     return;
                 }
             }
-  
     }
+
     private void OnTriggerStay(Collider other)
     {
-        if (building != null)
+        if (other.tag == "Mob")
         {
-            if (building.GetComponent<TowerForceField>() != null)
-            { building.GetComponent<TowerForceField>().TryForceFieldOn(); }
+            if (building != null)
+            {
+                if (building.GetComponent<TowerForceField>() != null)
+                {
+                    building.GetComponent<TowerForceField>().TryForceFieldOn();
+                }
+            }
+
         }
     }
     
@@ -136,7 +190,7 @@ public class Tile : MonoBehaviour
 
 }
     
-    private void OnMouseExit()
+ /*   private void OnMouseExit()
     {
         Destroy(hoverInstance);
         GetComponent<MeshRenderer>().materials[0] = startingMaterial;
@@ -150,6 +204,7 @@ public class Tile : MonoBehaviour
             }
         }
     }
+ */
 
     public MobHealth[] GetMobsOnTile()
     {

@@ -56,7 +56,7 @@ public class TowerPulse : Building
                 {
              
                 mobsOnTile[i].TakeDamage(damage[level]);
-                mobsOnTile[i].GetComponent<ParticleSystem>().Play();
+              
                 }
             }
            }

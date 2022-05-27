@@ -14,12 +14,20 @@ public class ResourceManager : MonoBehaviour
     [SerializeField] int rssRed = 0;
     [SerializeField] int[] startRssWhite;
     [SerializeField] int[] startRssColour;
-    [SerializeField] Text textWhite, textGreen, textBlue, textRed;
+    [SerializeField] TextMeshProUGUI textWhite, textGreen, textBlue, textRed;
     ManageScene manageScene;
-    
+    [SerializeField] TextMeshProUGUI[] yellowCostText;
+    [SerializeField] TextMeshProUGUI[] greenCostText;
+    [SerializeField] TextMeshProUGUI[] blueCostText;
+    [SerializeField] TextMeshProUGUI[] redCostText;
+    [SerializeField] Building harvesterPrefab;
+    [SerializeField] Building towerPrefab;
+    [SerializeField] Building forcefieldPrefab;
+    [SerializeField] Building pulsePrefab;
+    BuildManager bm;
     void Start()
     { manageScene = FindObjectOfType<ManageScene>();
-
+        bm = FindObjectOfType<BuildManager>();
         rssWhite = startRssWhite[manageScene.GetDifficulty()];
         rssGreen = startRssColour[manageScene.GetDifficulty()];
         rssBlue = startRssColour[manageScene.GetDifficulty()];
@@ -66,6 +74,76 @@ public class ResourceManager : MonoBehaviour
         textGreen.text = ("" + rssGreen);
         textBlue.text = ("" + rssBlue);
         textRed.text = ("" + rssRed);
+
+        if ((rssWhite) < harvesterPrefab.costWhite[0])
+        { yellowCostText[0].color = new Color(1, 0, 0); }
+        else yellowCostText[0].color = new Color(1, 1, 1);
+
+        if ((rssWhite) < towerPrefab.costWhite[0])
+        { yellowCostText[1].color = new Color(1, 0, 0); }
+        else yellowCostText[1].color = new Color(1, 1, 1);
+
+        if ((rssWhite) < forcefieldPrefab.costWhite[0])
+        {yellowCostText[2].color = new Color(1, 0, 0); }
+        else yellowCostText[2].color = new Color(1, 1, 1);
+
+        if ((rssWhite) < pulsePrefab.costWhite[0])
+        { yellowCostText[3].color = new Color(1, 0,0);  }
+        else yellowCostText[3].color = new Color(1, 1, 1);
+
+
+        if ((rssGreen) < harvesterPrefab.costGreen[0])
+        { greenCostText[0].color = new Color(1, 0, 0); }
+        else greenCostText[0].color = new Color(1, 1, 1);
+
+        if ((rssWhite) < towerPrefab.costGreen[0])
+        {greenCostText[1].color = new Color(1, 0, 0); }
+        else greenCostText[1].color = new Color(1, 1, 1);
+
+        if ((rssGreen) < forcefieldPrefab.costGreen[0])
+        { greenCostText[2].color = new Color(1, 0, 0); }
+        else greenCostText[2].color = new Color(1, 1, 1);
+
+        if ((rssGreen) < pulsePrefab.costGreen[0])
+        { greenCostText[3].color = new Color(1, 0, 0); }
+        else greenCostText[3].color = new Color(1, 1, 1);
+
+
+        if ((rssRed) < harvesterPrefab.costRed[0])
+        { redCostText[0].color = new Color(1,0, 0); }
+        else redCostText[0].color = new Color(1, 1, 1);
+
+        if ((rssRed) < towerPrefab.costRed[0])
+        { redCostText[1].color = new Color(1, 0, 0); }
+        else redCostText[1].color = new Color(1, 1, 1);
+
+        if ((rssRed) < forcefieldPrefab.costRed[0])
+        { redCostText[2].color = new Color(1,0, 0); }
+        else redCostText[2].color = new Color(1, 1, 1);
+
+        if ((rssRed) < pulsePrefab.costRed[0])
+        { redCostText[3].color = new Color(1, 0, 0); }
+        else redCostText[3].color = new Color(1, 1, 1);
+
+
+        if ((rssBlue) < harvesterPrefab.costBlue[0])
+        {blueCostText[0].color = new Color(1, 0, 0); }
+        else blueCostText[0].color = new Color(1, 1, 1);
+
+        if ((rssBlue) < towerPrefab.costBlue[0])
+        { blueCostText[1].color = new Color(1, 0, 0); }
+        else blueCostText[1].color = new Color(1, 1, 1);
+
+        if ((rssBlue) < forcefieldPrefab.costBlue[0])
+        { blueCostText[2].color = new Color(1, 0, 0); }
+        else blueCostText[2].color = new Color(1, 1, 1);
+
+        if ((rssBlue) < pulsePrefab.costBlue[0])
+        { blueCostText[3].color = new Color(1, 0, 0); }
+        else blueCostText[3].color = new Color(1, 1, 1);
+
+        
+
     }
 
    

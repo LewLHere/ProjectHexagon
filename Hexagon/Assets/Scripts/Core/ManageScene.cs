@@ -13,8 +13,7 @@ public class ManageScene : MonoBehaviour
    
    
         bool musicEnabled = true;
-    [SerializeField] AudioSource musicSource;
-   
+ 
 
     private void Awake()
     {
@@ -27,14 +26,12 @@ public class ManageScene : MonoBehaviour
      
         if (musicEnabled == false)
         {
-            GameObject.Find("BackgroundMusic").GetComponent<AudioSource>().Stop();
+            FindObjectOfType<AudioListener>().enabled = false;
+            
         }
     }
 
  
-    public void GameOver()
-    { SceneManager.LoadScene(0); }
-
     public void LoadBoard(int boardNumber)
     {
         SceneManager.LoadScene(boardNumber);
@@ -51,14 +48,13 @@ public class ManageScene : MonoBehaviour
 
         public void DisableMusic()
     {
+        FindObjectOfType<AudioListener>().enabled = false;
         musicEnabled = false;
-        musicSource.Stop();
     }
         public void EnableMusic()
     {
-
         musicEnabled = true;
-        musicSource.Play();
+        FindObjectOfType<AudioListener>().enabled = true;
 
     }
       
