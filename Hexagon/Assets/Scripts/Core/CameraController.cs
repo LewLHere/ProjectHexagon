@@ -28,6 +28,7 @@ public class CameraController : MonoBehaviour
     int lightChangeCounter = 0;
     void Start()
     {
+        Time.timeScale = 1;
         sceneM = FindObjectOfType<ManageScene>();
         startPosition = mainCamera.transform.position;  
         tg = FindObjectOfType<TileGroups>();

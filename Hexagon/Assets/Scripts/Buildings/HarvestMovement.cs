@@ -9,7 +9,7 @@ public class HarvestMovement : MonoBehaviour
     [SerializeField] float distanceTolerance = .1f;
     [SerializeField] GameObject harvesterBuilding;
     [SerializeField] int indexToHarvest = 0;
-    [SerializeField] float waitTime;
+    [SerializeField] float[] waitTime;
     [SerializeField] GameObject[] sparks;
     Transform targetTransform;
     bool nextUpHarvest = true;
@@ -17,8 +17,10 @@ public class HarvestMovement : MonoBehaviour
     float speed;
     ResourceManager rssManager;
     GameObject rssInstance;
+    ManageScene ms;
     void Start()
     {
+        ms = FindObjectOfType<ManageScene>();
         rssManager = FindObjectOfType<ResourceManager>();
         for (int i = 0; i < tiles.Length; i++)
         { tiles[i] = harvesterBuilding.GetComponent<Harvester>().GetNeighboredTile(i); }
@@ -129,7 +131,7 @@ public class HarvestMovement : MonoBehaviour
     IEnumerator WaitAtLocation()
     {
         readyToMove = false;
-        yield return new WaitForSeconds(waitTime);
+        yield return new WaitForSeconds(waitTime[ms.GetDifficulty()]);
         readyToMove = true;
     }
     public void SetHarvester(GameObject harvester)

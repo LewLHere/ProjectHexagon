@@ -8,9 +8,11 @@ public class MobHealth : MonoBehaviour
 {
 
     [SerializeField] int startHealth;
+    [SerializeField] float changeHPtextTime = .3f;
     int currentHealth;
     [SerializeField] TextMeshProUGUI hpText;
     [SerializeField] Canvas enemyDisplay;
+   
     GameObject pulseZone;
     bool readyToBePulsed = true;
     int level;
@@ -20,6 +22,7 @@ public class MobHealth : MonoBehaviour
     int indexOnTile;
     void Start()
     {
+       
         spawnEnemies = FindObjectOfType<SpawnEnemies>();
         anim = GetComponent<Animator>();
         currentHealth = startHealth;
@@ -35,9 +38,12 @@ public class MobHealth : MonoBehaviour
   
       public void TakeDamage(int damage)
     {
-      
+       
         if (mob.GetShield().activeSelf != true)
         {
+           
+           
+            StartCoroutine("GotHit",damage);
             currentHealth -= damage;
            
         }
@@ -60,6 +66,29 @@ public class MobHealth : MonoBehaviour
         }
     }
 
+    IEnumerator GotHit(int damage)
+    {
+      
+        if (damage > 0)
+        {
+            hpText.color = new Color32(255, 122, 122, 255);
+            hpText.fontStyle = TMPro.FontStyles.Bold;
+            yield return new WaitForSeconds(changeHPtextTime);
+            hpText.color = new Color32(255, 255, 255, 255);
+            hpText.fontStyle = TMPro.FontStyles.Normal;
+        }
+        else if (damage < 0 )
+        {
+            hpText.color = new Color32(122, 255, 122, 255);
+            hpText.fontStyle = TMPro.FontStyles.Bold;
+            yield return new WaitForSeconds(changeHPtextTime);
+            hpText.color = new Color32(255, 255, 255, 255);
+            hpText.fontStyle = TMPro.FontStyles.Normal;
+        }
+        
+       
+       
+    }
     public void UpdateHpTextRotation()
     { enemyDisplay.transform.rotation = FindObjectOfType<Camera>().transform.rotation; }
     private void ActivateHP(object sender, EventArgs e)

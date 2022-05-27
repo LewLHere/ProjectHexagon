@@ -70,7 +70,7 @@ MonoBehaviour:
   lightRange: 140000001e0000002d0000003c00000046000000500000005a000000640000006e00000078000000820000008c00000096000000a000000000000000
   zeroTile: {fileID: 0}
   pauseButton: {fileID: 0}
-  pauseButtonText: {fileID: 0}
+  gameOverGO: {fileID: 0}
 --- !u!1001 &2987919534347680515
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -122,6 +122,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5205919328025907277, guid: 0fd29f053bde29f4680ab144e8a67065, type: 3}
+      propertyPath: pulsePrefab
+      value: 
+      objectReference: {fileID: 7366587622032212588, guid: bbf41436cafd7724b96e641f35b938ef, type: 3}
+    - target: {fileID: 5205919328025907277, guid: 0fd29f053bde29f4680ab144e8a67065, type: 3}
+      propertyPath: towerPrefab
+      value: 
+      objectReference: {fileID: 2589699466414786179, guid: 8447d6d8384c573439d83cc3d43a9f69, type: 3}
+    - target: {fileID: 5205919328025907277, guid: 0fd29f053bde29f4680ab144e8a67065, type: 3}
+      propertyPath: harvesterPrefab
+      value: 
+      objectReference: {fileID: 2668267042676169066, guid: 0932306834688d4449e61e2bba52f5e6, type: 3}
+    - target: {fileID: 5205919328025907277, guid: 0fd29f053bde29f4680ab144e8a67065, type: 3}
+      propertyPath: forcefieldPrefab
+      value: 
+      objectReference: {fileID: 2533154309895449910, guid: 32e816ae62030d54eaaee873a226aa4c, type: 3}
     - target: {fileID: 5205919328025907279, guid: 0fd29f053bde29f4680ab144e8a67065, type: 3}
       propertyPath: m_Name
       value: ResourceManager

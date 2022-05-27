@@ -16,10 +16,10 @@ public class Building : MonoBehaviour
     [SerializeField] protected GameObject[] neighboredTiles = new GameObject[6];
    [SerializeField] protected float minDistance = 6;
    [SerializeField] protected Tile tile;
-    [SerializeField] protected int[] costWhite = new int[5];
-   [SerializeField] protected int[] costBlue= new int[5];
-   [SerializeField] protected int[] costGreen= new int[5];
-   [SerializeField] protected int[] costRed= new int[5];
+    [SerializeField] public int[] costWhite = new int[5];
+   [SerializeField] public int[] costBlue= new int[5];
+   [SerializeField] public int[] costGreen= new int[5];
+   [SerializeField] public int[] costRed= new int[5];
     [SerializeField] protected int level = 0;
    [SerializeField] protected int buildingIndex;
    [SerializeField] protected GameObject[] rangeGO;

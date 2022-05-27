@@ -82,6 +82,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3261419979306325097, guid: b731fa12ac841c1429297e1b5999a75b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3846715281018877136, guid: b731fa12ac841c1429297e1b5999a75b, type: 3}
       propertyPath: m_Name
       value: PulseGO

@@ -27,6 +27,9 @@ public class SpawnEnemies : MonoBehaviour
     [SerializeField] TextMeshProUGUI currentWave;
     [SerializeField] GameObject necromancer;
     [SerializeField] float necroAnimLength;
+    [SerializeField] float necromancerRotationSpeed = 1f;
+
+    [SerializeField] AudioSource newWaveAudio;
     int difficulty;
     float countdown;
     public float tileHeight = 2.5f;
@@ -67,6 +70,10 @@ public class SpawnEnemies : MonoBehaviour
             if (Vector3.Distance(new Vector3(necromancer.transform.position.x, 0, 0), new Vector3(randomSpawnTile.transform.position.x, 0, 0)) > .3f && necroAnimationDone)
             {
                 necromancer.transform.position = Vector3.MoveTowards(necromancer.transform.position, new Vector3(randomSpawnTile.transform.position.x, necromancer.transform.position.y, randomSpawnTile.transform.position.z + 5), 5f * Time.deltaTime);
+                Vector3 dir = randomSpawnTile.transform.position - necromancer.transform.position;
+                dir.y = 0;
+                Quaternion rot = Quaternion.LookRotation(dir);
+                necromancer.transform.rotation = Quaternion.Slerp(transform.rotation, rot, necromancerRotationSpeed * Time.deltaTime);
             }
             else {
                 
@@ -106,6 +113,7 @@ public class SpawnEnemies : MonoBehaviour
         {
              yield return new WaitForSeconds(3); 
         }
+        newWaveAudio.Play();
        int mobsSpawnedThisWave = 0;
        wavesOnCurrentBoard++;
         while (mobsSpawnedThisWave < waveSize[wave])
@@ -174,6 +182,7 @@ public class SpawnEnemies : MonoBehaviour
             mobInstance.GetComponent<MobHealth>().SetHP(hpMultiplier[difficulty]*hp[waveNumber] + hp[waveNumber] * 2 * enemyTier );
 
             mobInstance.GetComponent<MobMover>().SetLastSpottedOn(randomSpawnTile);
+            mobInstance.GetComponent<MobMover>().SetTarget(randomSpawnTile);
         }
         CreateNextSpawnTile();
     }

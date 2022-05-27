@@ -1,1 +1,13 @@
 Music: https://opengameart.org/content/instrumental-music3 - CC0
+
+SFX: 
+https://opengameart.org/content/creepy-piano-sfx
+https://opengameart.org/content/horror-sound-effects-library
+https://opengameart.org/content/voices-sound-effects-library
+https://opengameart.org/content/open-chest-sfx
+https://opengameart.org/content/game-over-bad-chest-sfx
+https://opengameart.org/content/magic-spell-sfx
+
+Particles: https://opengameart.org/content/particle-pack-80-sprites
+
+Fonts:https://opengameart.org/content/kenney-fonts
