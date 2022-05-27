@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 1c9a2407d3ed7f342ac0d8a977fb4091
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - KenPixel Square
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 20863ee2fc2102b4886fac89b5d7c307, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

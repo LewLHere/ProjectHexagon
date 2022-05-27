@@ -24,7 +24,7 @@ public class MobMover : MonoBehaviour
     SpawnEnemies spawnEnemies;
     ManageScene manageScene;
     bool nowMove = false;
-
+    bool isDieing = false;
     float startRotationSpeed = 100;
     public string colour;
     MobHealth mh;
@@ -67,7 +67,10 @@ public class MobMover : MonoBehaviour
         distanceToNextTarget = Vector3.Distance(new Vector3(transform.position.x, spawnEnemies.tileHeight, transform.position.z), new Vector3(currentTarget.transform.position.x, spawnEnemies.tileHeight, currentTarget.transform.position.z));
         if (distanceToNextTarget > distanceOfTwoTiles / 30)
         {
-            MoveToTarget();
+            if (isDieing) return;
+            
+                MoveToTarget();
+            
         }
         else
         {
@@ -184,6 +187,7 @@ public class MobMover : MonoBehaviour
 
     IEnumerator WaitForDie(bool wentThrough)
     {
+        isDieing = true;
         anim.SetTrigger("Die");
 
         yield return new WaitForSeconds(dieTime);
@@ -210,7 +214,8 @@ public class MobMover : MonoBehaviour
         if (tier == 1)
         {
             StartCoroutine("WaitForDie", false);
-            manageScene.GameOver();
+            CameraController cc = FindObjectOfType<CameraController>();
+            cc.GameOver();
         }
       
        

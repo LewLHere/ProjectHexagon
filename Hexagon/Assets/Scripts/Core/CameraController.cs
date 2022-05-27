@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class CameraController : MonoBehaviour
 {
@@ -15,7 +16,9 @@ public class CameraController : MonoBehaviour
     [SerializeField] int[] lightRange;
     [SerializeField] GameObject zeroTile;
     [SerializeField] Button pauseButton;
-    [SerializeField] TextMeshProUGUI pauseButtonText;
+    [SerializeField] GameObject gameOverGO;
+    ManageScene sceneM;
+    
     int boardSize = 0;
     TileGroups tg;
     Vector3 startPosition;
@@ -25,6 +28,7 @@ public class CameraController : MonoBehaviour
     int lightChangeCounter = 0;
     void Start()
     {
+        sceneM = FindObjectOfType<ManageScene>();
         startPosition = mainCamera.transform.position;  
         tg = FindObjectOfType<TileGroups>();
         lightGO.transform.position = new Vector3(0, lightTransformY[boardSize], 0);
@@ -63,7 +67,12 @@ public class CameraController : MonoBehaviour
     }
 
 
-  
+  public void GameOver()
+    {
+        gameOverGO.SetActive(true);
+                    Time.timeScale = 0;
+
+        }
     public void PauseGame()
     {
       
@@ -80,6 +89,11 @@ public class CameraController : MonoBehaviour
             isPaused = false;
         }
     }
+
+    public void LoadScene(int sceneToLoad)
+    {
+        sceneM.LoadBoard(sceneToLoad);
+    }
     public void SetCameraDefault()
     {
         cameraIsDefault = true;
@@ -93,14 +107,24 @@ public class CameraController : MonoBehaviour
        
     }
 
+    
     public void SetDefaultSize(int currentBoardSize)
     {
         boardSize = currentBoardSize;
-        currentDefaultSize = 8 + (currentBoardSize-1) * 5;
+        currentDefaultSize = 8 + (currentBoardSize-1) * 3;
         StartCoroutine("MoveCameraOut");
          
     }
 
+    public void StartMusic()
+    {
+        GameObject.Find("BackgroundMusic").GetComponent<AudioSource>().Play();
+    }
+
+    public void StopMusic()
+    {
+        GameObject.Find("BackgroundMusic").GetComponent<AudioSource>().Stop();
+    }
     IEnumerator MoveCameraOut()
     {
 

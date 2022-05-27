@@ -14,7 +14,7 @@ public class ResourceManager : MonoBehaviour
     [SerializeField] int rssRed = 0;
     [SerializeField] int[] startRssWhite;
     [SerializeField] int[] startRssColour;
-    [SerializeField] Text textWhite, textGreen, textBlue, textRed;
+    [SerializeField] TextMeshProUGUI textWhite, textGreen, textBlue, textRed;
     ManageScene manageScene;
     
     void Start()

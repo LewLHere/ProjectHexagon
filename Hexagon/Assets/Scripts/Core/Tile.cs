@@ -116,10 +116,16 @@ public class Tile : MonoBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
-        if (building != null)
+        if (other.tag == "Mob")
         {
-            if (building.GetComponent<TowerForceField>() != null)
-            { building.GetComponent<TowerForceField>().TryForceFieldOn(); }
+            if (building != null)
+            {
+                if (building.GetComponent<TowerForceField>() != null)
+                {
+                    building.GetComponent<TowerForceField>().TryForceFieldOn();
+                }
+            }
+
         }
     }
     

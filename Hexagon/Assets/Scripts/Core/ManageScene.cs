@@ -27,14 +27,12 @@ public class ManageScene : MonoBehaviour
      
         if (musicEnabled == false)
         {
+            
             GameObject.Find("BackgroundMusic").GetComponent<AudioSource>().Stop();
         }
     }
 
  
-    public void GameOver()
-    { SceneManager.LoadScene(0); }
-
     public void LoadBoard(int boardNumber)
     {
         SceneManager.LoadScene(boardNumber);
