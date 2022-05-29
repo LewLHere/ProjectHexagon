@@ -5,12 +5,12 @@ using UnityEngine;
 public class TowerPulse : Building
 {
     [SerializeField] float[] fireRate = new float[5];
-    [SerializeField] GameObject pulsePrefab;
+    [SerializeField] GameObject[] pulsePrefabs;
     [SerializeField] MobHealth[] mobsInRange;
     [SerializeField] int[] damage;
 
     GameObject target;
-    bool readyToPulse = true;
+    bool readyToPulse = false;
     private void Start()
     {
         mobsInRange = new MobHealth[300];
@@ -18,8 +18,14 @@ public class TowerPulse : Building
         tg = FindObjectOfType<TileGroups>();
         neighboredTiles = tile.GetNeighboredTiles(tile.gameObject);
         buildingIndex = 3;
+        StartCoroutine("WaitUntilBuilt");
     }
-
+   
+    IEnumerator WaitUntilBuilt()
+    {
+        yield return new WaitForSeconds(buildTime);
+        readyToPulse = true;
+    }
     public void TryToPulse()
     {
 
@@ -33,7 +39,7 @@ public class TowerPulse : Building
     {
         MobHealth[] mobsOnTile;
         readyToPulse = false;
-        pulsePrefab.SetActive(true);
+        
         /*   mobsOnTile = tile.GetMobsOnTile();                              // For this tile
            for (int i = 0; i < mobsOnTile.Length; i++)
            {
@@ -47,7 +53,7 @@ public class TowerPulse : Building
 
         for (int j = 0; j < neighboredTiles.Length; j++)                                 // For all surrounding tiles
            {
-            
+           
            mobsOnTile= neighboredTiles[j].GetComponent<Tile>().GetMobsOnTile();
            
             for (int i = 0; i < mobsOnTile.Length; i++)
@@ -59,11 +65,18 @@ public class TowerPulse : Building
               
                 }
             }
+            if (mobsOnTile.Length > 0)
+            { pulsePrefabs[j].SetActive(true); }
            }
         
        
         yield return new WaitForSeconds(fireRate[level]);
-        pulsePrefab.SetActive(false);
+        pulsePrefabs[0].SetActive(false);
+        pulsePrefabs[1].SetActive(false);
+        pulsePrefabs[2].SetActive(false);
+        pulsePrefabs[3].SetActive(false);
+        pulsePrefabs[4].SetActive(false);
+        pulsePrefabs[5].SetActive(false);
         readyToPulse = true;
     }
 

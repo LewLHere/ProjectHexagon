@@ -26,7 +26,9 @@ public class ManageScene : MonoBehaviour
      
         if (musicEnabled == false)
         {
-            FindObjectOfType<AudioListener>().enabled = false;
+
+            AudioListener.pause = true;
+            
             
         }
     }
@@ -48,12 +50,12 @@ public class ManageScene : MonoBehaviour
 
         public void DisableMusic()
     {
-        FindObjectOfType<AudioListener>().enabled = false;
+        AudioListener.pause = true;
         musicEnabled = false;
     }
         public void EnableMusic()
     {
-        musicEnabled = true;
+        AudioListener.pause = false;
         FindObjectOfType<AudioListener>().enabled = true;
 
     }

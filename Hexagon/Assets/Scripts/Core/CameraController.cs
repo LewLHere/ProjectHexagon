@@ -119,12 +119,12 @@ public class CameraController : MonoBehaviour
 
     public void StartMusic()
     {
-        GameObject.Find("BackgroundMusic").GetComponent<AudioSource>().Play();
+        AudioListener.pause = false;
     }
 
     public void StopMusic()
     {
-        GameObject.Find("BackgroundMusic").GetComponent<AudioSource>().Stop();
+        AudioListener.pause = true;
     }
     IEnumerator MoveCameraOut()
     {

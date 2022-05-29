@@ -105,7 +105,10 @@ MonoBehaviour:
   distanceTolerance: 0.1
   harvesterBuilding: {fileID: 0}
   indexToHarvest: 0
-  waitTime: 1
+  waitTime:
+  - 0.3
+  - 0.5
+  - 0.7
   sparks:
   - {fileID: 6773908567029146949}
   - {fileID: 3475892405106867465}

@@ -90,6 +90,7 @@ public class BuildManager : MonoBehaviour
 
     public void BuildBuilding(GameObject buildGO)
     {
+        Debug.Log(tileToBuild);
          if(tileToBuild != null)
        
         {
@@ -140,6 +141,7 @@ public class BuildManager : MonoBehaviour
 
                         tileToBuild.GetBuilding().IncreaseBuildingLevel();
                         levelUpAudio.Play();
+                        GetBuildingCost(tileToBuild.GetBuilding().gameObject, tileToBuild.GetBuilding().GetLevel());
                     }
                 }
             }
@@ -202,10 +204,10 @@ public class BuildManager : MonoBehaviour
             {
                 textCost.text = "Forcefield Max";
             }
-            textWhite.text = "/";
-            textBlue.text = "/";
-            textGreen.text = "/";
-            textRed.text = "/";
+            textWhite.text = "";
+            textBlue.text = "";
+            textGreen.text = "";
+            textRed.text = "";
         }
 
     }

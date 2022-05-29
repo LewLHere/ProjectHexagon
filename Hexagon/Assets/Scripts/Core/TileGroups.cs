@@ -13,23 +13,31 @@ public class TileGroups : MonoBehaviour
     [SerializeField] int maxSize = 14;
     [SerializeField] float twoTileDistance = 5;
     [SerializeField] float z = 0;
+    [SerializeField] Animator necroAnim;
+
     public List<GameObject> red, green, blue, white, all;
     int currentBoardSize;
     CameraController cameraController;
     int index = 0;
+    
 
+    private void Awake()
+    {
+
+     
+    }
     private void Start()
     {
         cameraController = FindObjectOfType<CameraController>();
         CreateTileGroups();
         DeactivateBoard(all);
-        startTile.gameObject.SetActive(true);
-        IncreaseBoardSize();
+       startTile.gameObject.SetActive(true);
+      IncreaseBoardSize();
     }
 
  
    
-    private void Update()
+  private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
@@ -47,13 +55,15 @@ public class TileGroups : MonoBehaviour
             GetCurrentBoard();
         }
     }
-
+ 
+  
     public List<GameObject> GetAll()
     { return all; }
 
 
     private void ActivateAllNeighbors()
     {
+       
         for (int i = 0; i < all.Count; i++)
         {
 
@@ -63,6 +73,7 @@ public class TileGroups : MonoBehaviour
             }
         }
     }
+
 
     public List<GameObject> GetEnemySpawnTiles()
     { return enemyStartingTiles; }
@@ -88,7 +99,6 @@ public class TileGroups : MonoBehaviour
         all.AddRange(green);
         all.AddRange(blue);
         all.AddRange(white);
-
     }
 
     public void GetCurrentBoard()
@@ -109,11 +119,14 @@ public class TileGroups : MonoBehaviour
 
             { currentBoard[i] = null; }
         }
+
         ActivateAllNeighbors();
         UpdateEnemyStartTiles();
         UpdateEnemyFinishLineTiles();
+
     }
 
+   
     public List<GameObject> GetBoard(int boardSize)
     {
         index = 0;

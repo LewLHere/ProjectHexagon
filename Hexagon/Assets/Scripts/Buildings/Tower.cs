@@ -9,9 +9,9 @@ public class Tower : Building
     [SerializeField] GameObject projectilePrefab;
     [SerializeField] MobHealth[] mobsInRange;
     [SerializeField] int[] damage;
-  
+    
     GameObject target;
-    bool readyToShoot = true;
+    bool readyToShoot = false;
     private void Start()
     {
         mobsInRange = new MobHealth[300];
@@ -19,8 +19,14 @@ public class Tower : Building
         tg = FindObjectOfType<TileGroups>();
         neighboredTiles = tile.GetNeighboredTiles(tile.gameObject);
         buildingIndex = 1;
+        StartCoroutine("WaitUntilBuilt");
     }
 
+    IEnumerator WaitUntilBuilt()
+    {
+        yield return new WaitForSeconds(buildTime);
+        readyToShoot = true;
+    }
     public void TryShoot(MobHealth target)
     {
       

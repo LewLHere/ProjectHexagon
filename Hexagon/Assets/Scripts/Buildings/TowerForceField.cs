@@ -7,16 +7,22 @@ public class TowerForceField : Building
     [SerializeField] float fireRate = .7f;
     [SerializeField] GameObject forceFieldPrefab = null;
     [SerializeField] int[] damage;
-    bool isReadyForForceField = true;
+    bool isReadyForForceField = false;
     
 
     void Start()
     {
         buildingIndex = 2;
+        StartCoroutine("WaitUntilBuilt");
     }
 
+IEnumerator WaitUntilBuilt()
+{
+    yield return new WaitForSeconds(buildTime);
+        isReadyForForceField = true;
+}
 
-    private void Update()
+private void Update()
     {
       
     }

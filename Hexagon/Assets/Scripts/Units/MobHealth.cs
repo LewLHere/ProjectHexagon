@@ -10,7 +10,7 @@ public class MobHealth : MonoBehaviour
     [SerializeField] int startHealth;
     [SerializeField] float changeHPtextTime = .3f;
     int currentHealth;
-    [SerializeField] TextMeshProUGUI hpText;
+     public TextMeshProUGUI hpText;
     [SerializeField] Canvas enemyDisplay;
    
     GameObject pulseZone;

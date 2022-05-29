@@ -24,6 +24,8 @@ public class Building : MonoBehaviour
    [SerializeField] protected int buildingIndex;
    [SerializeField] protected GameObject[] rangeGO;
     [SerializeField] float yComponent;
+
+    [SerializeField] protected float buildTime;
     protected Animator anim;
     protected TileGroups tg;
     protected BuildManager bm;

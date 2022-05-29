@@ -18,15 +18,21 @@ public class Harvester : Building
         bm = FindObjectOfType<BuildManager>();
         tg = FindObjectOfType<TileGroups>();
         neighboredTiles = tile.GetNeighboredTiles(tile.gameObject);
-        StartCoroutine("SpawnHarvester");
-        buildingIndex = 0;
-      
-        CreateOccupiedTiles();
+        StartCoroutine("WaitUntilBuilt");
        
+        buildingIndex = 0;
+        CreateOccupiedTiles();
+
+
 
     }
 
-
+    IEnumerator WaitUntilBuilt()
+    {
+        yield return new WaitForSeconds(buildTime);
+       
+        StartCoroutine("SpawnHarvester");
+    }
     private void CreateOccupiedTiles()
     {
         for (int i = 0; i < neighboredTiles.Length; i++)

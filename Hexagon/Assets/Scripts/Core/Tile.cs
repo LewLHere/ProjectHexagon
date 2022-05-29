@@ -98,10 +98,10 @@ public class Tile : MonoBehaviour
         if (building != null && building.GetLevel() >= building.maxLevel)
         {
            
-            bm.upgradeCostText[0].text = "/" + building.GetCostWhite(building.GetLevel() + 1);
-            bm.upgradeCostText[1].text = "/" + building.GetCostGreen(building.GetLevel() + 1);
-            bm.upgradeCostText[2].text = "/" + building.GetCostRed(building.GetLevel() + 1);
-            bm.upgradeCostText[3].text = "/" + building.GetCostBlue(building.GetLevel() + 1);
+            bm.upgradeCostText[0].text = "" ;
+            bm.upgradeCostText[1].text = "" ;
+            bm.upgradeCostText[2].text = "" ;
+            bm.upgradeCostText[3].text = "" ;
             bm.SetUpdateCostText("Building Max Lvl");
 
             ActivateUpgradeButton();
@@ -111,22 +111,25 @@ public class Tile : MonoBehaviour
 
     private void ActivateUpgradeButton()
     {
-        if ((rm.GetBlue()) < building.costBlue[building.GetLevel()+1])
-        { bm.upgradeCostText[3].color = new Color(1, 0, 0); }
-        else bm.upgradeCostText[3].color = new Color(1, 1, 1);
+        if (building.GetLevel() < building.maxLevel)
+        {
+            if ((rm.GetBlue()) < building.costBlue[building.GetLevel() + 1])
+            { bm.upgradeCostText[3].color = new Color(1, 0, 0); }
+            else bm.upgradeCostText[3].color = new Color(1, 1, 1);
 
-        if ((rm.GetWhite()) < building.costWhite[building.GetLevel() + 1])
-        { bm.upgradeCostText[0].color = new Color(1, 0, 0); }
-        else bm.upgradeCostText[0].color = new Color(1, 1, 1);
+            if ((rm.GetWhite()) < building.costWhite[building.GetLevel() + 1])
+            { bm.upgradeCostText[0].color = new Color(1, 0, 0); }
+            else bm.upgradeCostText[0].color = new Color(1, 1, 1);
 
-        if ((rm.GetGreen()) < building.costGreen[building.GetLevel() + 1])
-        { bm.upgradeCostText[1].color = new Color(1, 0, 0); }
-        else bm.upgradeCostText[1].color = new Color(1, 1, 1);
+            if ((rm.GetGreen()) < building.costGreen[building.GetLevel() + 1])
+            { bm.upgradeCostText[1].color = new Color(1, 0, 0); }
+            else bm.upgradeCostText[1].color = new Color(1, 1, 1);
 
-        if ((rm.GetRed()) < building.costRed[building.GetLevel() + 1])
-        { bm.upgradeCostText[2].color = new Color(1, 0, 0); }
-        else bm.upgradeCostText[2].color = new Color(1, 1, 1);
+            if ((rm.GetRed()) < building.costRed[building.GetLevel() + 1])
+            { bm.upgradeCostText[2].color = new Color(1, 0, 0); }
+            else bm.upgradeCostText[2].color = new Color(1, 1, 1);
 
+        }
         if (building != null)
         {
           
@@ -137,6 +140,7 @@ public class Tile : MonoBehaviour
         Button ub = upgradeButton.GetComponent<Button>();
         buildingButtons.SetActive(false);
     }
+        
 
     private void ActivateBuildingButtons()
     {
@@ -156,7 +160,7 @@ public class Tile : MonoBehaviour
                     if(mobsOnThisTile[i] != null) { continue; }
 
                     mobsOnThisTile[i] = other.GetComponentInParent<MobHealth>();
-                    other.GetComponent<MobHealth>().SetIndexOnTile(i);
+                    other.GetComponentInParent<MobHealth>().SetIndexOnTile(i);
                     return;
                 }
             }

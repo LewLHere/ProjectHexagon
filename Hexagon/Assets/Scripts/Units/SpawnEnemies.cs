@@ -28,7 +28,7 @@ public class SpawnEnemies : MonoBehaviour
     [SerializeField] GameObject necromancer;
     [SerializeField] float necroAnimLength;
     [SerializeField] float necromancerRotationSpeed = 1f;
-
+    [SerializeField] GameObject winText;
     [SerializeField] AudioSource newWaveAudio;
     int difficulty;
     float countdown;
@@ -67,9 +67,10 @@ public class SpawnEnemies : MonoBehaviour
     {
         if (randomSpawnTile != null)
         {
-            if (Vector3.Distance(new Vector3(necromancer.transform.position.x, 0, 0), new Vector3(randomSpawnTile.transform.position.x, 0, 0)) > .3f && necroAnimationDone)
+            if (Vector3.Distance(new Vector3(necromancer.transform.position.x, 0, 0), new Vector3(randomSpawnTile.transform.position.x, 0, 0)) > .1f && necroAnimationDone)
             {
-                necromancer.transform.position = Vector3.MoveTowards(necromancer.transform.position, new Vector3(randomSpawnTile.transform.position.x, necromancer.transform.position.y, randomSpawnTile.transform.position.z + 5), 5f * Time.deltaTime);
+               
+                necromancer.transform.position = Vector3.MoveTowards(necromancer.transform.position, new Vector3(randomSpawnTile.transform.position.x, necromancer.transform.position.y, randomSpawnTile.transform.position.z + 3), 5f * Time.deltaTime);
                 Vector3 dir = randomSpawnTile.transform.position - necromancer.transform.position;
                 dir.y = 0;
                 Quaternion rot = Quaternion.LookRotation(dir);
@@ -87,6 +88,7 @@ public class SpawnEnemies : MonoBehaviour
         }
         if (readyForNextWave)
         {
+          
             StartCoroutine("StartWave", waveNumber);
         }
 
@@ -111,7 +113,7 @@ public class SpawnEnemies : MonoBehaviour
         readyForNextWave = false;
         if (wave == 0)
         {
-             yield return new WaitForSeconds(3); 
+             yield return new WaitForSeconds(12); 
         }
         newWaveAudio.Play();
        int mobsSpawnedThisWave = 0;
@@ -142,7 +144,12 @@ public class SpawnEnemies : MonoBehaviour
         yield return new WaitForSeconds(timeBetweenWaves[wave] - timeBetweenMobs[wave]);
         updateCountdownNow = false;
         waveNumber++;
-        if (wavesOnCurrentBoard >= wavesPerBoard)
+        if (waveNumber == 36)
+        { 
+            Time.timeScale = 0;
+            winText.SetActive(true);
+        }
+            if (wavesOnCurrentBoard >= wavesPerBoard)
         {
             tg.IncreaseBoardSize();
             wavesOnCurrentBoard = 0;

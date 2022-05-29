@@ -33,7 +33,7 @@ public class MobMover : MonoBehaviour
     bool isDieing = false;
     float startRotationSpeed = 100;
     public string colour;
-    TrailRenderer trail;
+   
     MobHealth mh;
     GameObject[] all;
    
@@ -42,7 +42,7 @@ public class MobMover : MonoBehaviour
 
     private void Awake()
     {
-        trail = GetComponentInChildren<TrailRenderer>();
+      
         mobGO.SetActive(false);
         mh = GetComponent<MobHealth>();
         spawnEnemies = FindObjectOfType<SpawnEnemies>();
@@ -102,23 +102,23 @@ public class MobMover : MonoBehaviour
 
             if (colour == "White")
             {
-                trail.material = trailMats[0];
+                
                 speed = startSpeed;
             }
             else if (colour == "Blue")
             {
-                trail.material = trailMats[1];
+             
                 shieldGO.SetActive(true);
             }
             else if (colour == "Green")
             {
-                trail.material = trailMats[2];
+               
                 StartCoroutine("WaitForHeal");
               
             }
             else if (colour == "Red")
             {
-                trail.material = trailMats[3];
+              
                 speed = redMultiplier * startSpeed;
             }
         }
@@ -203,6 +203,7 @@ public class MobMover : MonoBehaviour
 
     IEnumerator WaitForDie(bool wentThrough)
     {
+        
         isDieing = true;
         anim.SetTrigger("Die");
 
@@ -225,6 +226,8 @@ public class MobMover : MonoBehaviour
 
     void MobWentThrough()
     {
+        mh.hpText.enabled = false;
+        shieldGO.SetActive(false);
         if (tier == 0)
         {
             System.Random rnd = new System.Random();
