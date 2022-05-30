@@ -49,7 +49,7 @@ MonoBehaviour:
   timeBetweenMobs: []
   timeBetweenWaves: []
   speed: []
-  hp: 
+  hp: 070000000b0000001000000028000000160000001d000000250000002e00000038000000430000004e000000b40000005a0000006700000075000000840000005e01000094000000a5000000ad000000c0000000d4000000fa000000f4010000e8030000d0070000c8000000
   hpMultiplier: 
   wavesPerBoard: 0
   wavesOnCurrentBoard: 0
@@ -66,6 +66,7 @@ MonoBehaviour:
   necromancer: {fileID: 0}
   necroAnimLength: 0
   necromancerRotationSpeed: 1
+  winText: {fileID: 0}
   newWaveAudio: {fileID: 0}
   tileHeight: 2.5
   hpAreOn: 0

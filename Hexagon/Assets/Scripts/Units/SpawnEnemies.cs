@@ -144,7 +144,7 @@ public class SpawnEnemies : MonoBehaviour
         yield return new WaitForSeconds(timeBetweenWaves[wave] - timeBetweenMobs[wave]);
         updateCountdownNow = false;
         waveNumber++;
-        if (waveNumber == 36)
+        if (waveNumber == 26)
         { 
             Time.timeScale = 0;
             winText.SetActive(true);
